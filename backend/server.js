@@ -14,9 +14,9 @@ const app = express()
 const { getDatabaseConnection, dbEvents } = require('./src/database/dbService')
 
 //criar logs das requisições
-const logger = pino({
-    level: 'info', // Defina o nível do log, como 'info', 'debug', 'error', etc.
-}, pino.destination('./logs/app.json'))
+// const logger = pino({
+//     level: 'info', // Defina o nível do log, como 'info', 'debug', 'error', etc.
+// }, pino.destination('./logs/app.json'))
 
 // conectar na base de dados
 getDatabaseConnection(process.env.URL_DB)
@@ -29,13 +29,13 @@ app.use(cors({
     origin: 'http://localhost:5173', // Permite solicitações do frontend
     credentials: true,
 }))
-app.use(pinoHttp({ logger }));
+// app.use(pinoHttp({ logger }));
 
 
 app.use(routes)
 dbEvents.on('Connected', () => {
     app.listen(3100, () => {
-        logger.info('Servidor iniciado')
+        // logger.info('Servidor iniciado')
         console.log('servidor ON')
         console.log('Acesse http://localhost:3100')
     })
