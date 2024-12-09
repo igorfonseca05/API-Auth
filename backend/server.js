@@ -32,6 +32,7 @@ app.use(cors({
 // app.use(pinoHttp({ logger }));
 
 
+
 app.use(routes)
 dbEvents.on('Connected', () => {
     app.listen(3100, () => {
