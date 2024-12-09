@@ -1,0 +1,55 @@
+
+###
+POST http://localhost:3100/signup
+Content-Type: application/json
+
+{
+    "name": "Alan",
+    "email": "AlanFernandes@hotmail.com",
+    "password": "irf2009"
+    
+}
+
+###
+POST http://localhost:3100/login
+Content-Type: application/json
+
+{
+
+    "email": "AlanFernandes@hotmail.com",
+    "password": "irf2009"
+    
+}
+
+###
+
+POST http://localhost:3100/signup
+Content-Type: application/json
+
+{
+    "name": "Igor",
+    "email": "igorfonseca27@hotmail.com",
+    "password": "irf2009"
+    
+}
+###
+
+POST http://localhost:3100/login
+Content-Type: application/json
+
+{
+    "email": "igorfonseca27@hotmail.com",
+    "password": "123456"
+    
+}
+###
+
+DELETE http://localhost:3100/delete
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3M2RmOTEyOWJkYTJlZjA0MmEyZDM1NyIsImlhdCI6MTczMjExNDcwNywiZXhwIjoxNzMyMTE4MzA3fQ.OLpQNTLTQ70qaS0yV3HWpqrUIGf40XqN46Rg2i3ebrQ
+
+{
+    "email": "igorfonseca27@hotmail.com"
+    
+}
+###

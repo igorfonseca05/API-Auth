@@ -1,0 +1,94 @@
+/* Estilos da Navbar */
+header {
+    z-index: 10 !important;
+}
+
+.navbar {
+    position: fixed;
+    width: 100%;
+    top: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 66px;
+    background-color: #333;
+    /* z-index: 5 !important; */
+}
+
+.logo a {
+    color: white;
+    text-decoration: none;
+    font-size: 24px;
+    font-weight: bold;
+    /* font-size: 14px; */
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    align-items: center;
+    position: relative;
+}
+
+.nav-links li {
+    margin-left: 20px;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+    color: #00bcd4;
+    /* Cor para quando passar o mouse */
+}
+
+.contact-btn {
+    background-color: #00bcd4;
+    color: white;
+    padding: 4px 16px;
+    border-radius: 20px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.contact-btn:hover {
+    background-color: #008c9e;
+}
+
+.user_infos {
+    display: inline-flex;
+    align-items: center;
+    column-gap: 10px;
+    margin-left: 30px !important;
+}
+
+.user_infos figure {
+    width: 32px;
+    height: 32px;
+}
+
+.user_infos figure img {
+    width: 100%;
+    border-radius: 50% !important;
+}
+
+.dropIcon {
+    cursor: pointer;
+    user-select: none;
+    /* transform: rotateZ(0deg); */
+}
+
+.dropIcon {
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.2s ease-in-out;
+    /* transform: rotateZ(180deg); */
+}
+
+.rotate {
+    transform: rotateZ(180deg);
+}
