@@ -56,6 +56,8 @@ exports.login = async (req, res) => {
             console.log('Error ao adicionar token na base de dados')
         }
 
+        console.log('oi')
+
         res.cookie("refresh_Token", refreshToken, {
             httpOnly: true,
             secure: true,
