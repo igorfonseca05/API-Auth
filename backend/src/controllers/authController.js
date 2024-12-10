@@ -146,10 +146,6 @@ exports.login = async (req, res) => {
                 lastLogin: new Date()
             },
             access_token: acessToken,
-            session: {
-                ipAddress: req.ip,
-                device: req.headers['user-agent'],
-            }
         })
 
     } catch (error) {
