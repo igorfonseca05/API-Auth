@@ -1,8 +1,6 @@
 
 
 
-exports.refresh = (req, res) => {
-
-
+exports.refreshToken = (req, res) => {
 
 }
