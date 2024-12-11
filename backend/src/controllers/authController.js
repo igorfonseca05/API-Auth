@@ -5,12 +5,16 @@ const argon2 = require('argon2')
 const bcrypt = require('bcrypt')
 
 
+const secretToken = process.env.JWT_TOKEN
+
+let refreshTokenContainer = []
+
+
 // END-POINT DE CADASTRO
 exports.signUp = async (req, res) => {
 
     // obtendo logs
-    const { body } = req
-    req.log.info({ body }, 'Dados recebidos na requisição POST')
+    // req.log.info({ body }, 'Dados recebidos na requisição POST')
 
     try {
         const { email, name, password } = req.body
@@ -33,7 +37,7 @@ exports.signUp = async (req, res) => {
         const user = new User({ name, email, password })
         await user.save()
 
-        const token = await jwt.sign({ id: user._id, email: user.email }, process.env.JWT_TOKEN, { expiresIn: '1h' })
+        const token = await jwt.sign({ id: user._id, email: user.email }, secretToken, { expiresIn: '1h' })
 
         res.cookie('auth_token', token, {
             httpOnly: true,
@@ -71,9 +75,7 @@ exports.signUp = async (req, res) => {
 // END-POINT DE LOGIN
 exports.login = async (req, res) => {
 
-    const refreshContainer = []
-
-    req.log.info(req.body.email, 'Dados de Login recebidos via POST')
+    // req.log.info(req.body.email, 'Dados de Login recebidos via POST')
 
     try {
         const { email, password } = req.body
@@ -111,22 +113,22 @@ exports.login = async (req, res) => {
 
         // atribuindo tokens e salvando no 
         // array tokens base de dados
-        const acessToken = await jwt.sign({ id: user._id, email: user.email }, process.env.JWT_ACESS_TOKEN, { expiresIn: '15m' })
-        const refreshToken = await jwt.sign({ id: user._id, email: user.email }, process.env.JWT_TOKEN, { expiresIn: '7d' })
+        const acessToken = await jwt.sign({ id: user._id, email: user.email }, process.env.JWT_ACCESS_TOKEN, { expiresIn: '15m' })
+        const refreshToken = await jwt.sign({ id: user._id, email: user.email }, secretToken, { expiresIn: '7d' })
 
-        refreshContainer.push(refreshToken)
+        refreshTokenContainer.push(refreshToken)
 
         try {
-            user.refreshTokens = [...refreshContainer]
+            user.refreshTokens = [...refreshTokenContainer]
             await user.save()
-            console.log('salvo')
+            // console.log('salvo')
 
         } catch (error) {
             console.log(error)
         }
 
 
-        res.cookie('auth_token', refreshToken, {
+        res.cookie('refresh_token', refreshToken, {
             httpOnly: true,
             secure: true,
             sameSite: 'strict',
@@ -163,6 +165,17 @@ exports.login = async (req, res) => {
         )
     }
 }
+
+
+// exports.refresh = async (req, res) => {
+//     try {
+
+//         const refresh = req.cookie.refresh_token || req.headers.authorization?.replace('Bearer ', '')
+
+//     } catch (error) {
+
+//     }
+// }
 
 
 // END-POINT DE SIGNOUT
