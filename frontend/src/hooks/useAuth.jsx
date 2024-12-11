@@ -36,7 +36,8 @@ function useAuth() {
             }
 
             const userData = await res.json()
-            // localStorage.setItem('userAuth', JSON.stringify(userData))
+
+            // Adicionando dados do usuário em um context
             setUserAuth(userData)
             setSuccess(userData.message)
             setLoading(false)

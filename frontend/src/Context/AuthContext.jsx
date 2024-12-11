@@ -11,18 +11,19 @@ export function UserAuthContextProvider({ children }) {
 
     const [userAuth, setUserAuth] = useState(null)
 
-    console.log(userAuth)
+    // console.log(userAuth)
 
-
+    // Salvando dados usuário no localStorage
     useEffect(() => {
         userAuth && localStorage.setItem('userAuth', JSON.stringify(userAuth))
     }, [userAuth])
 
+    // Obtendo dados do localStorage caso ele já exista
     useEffect(() => {
         setUserAuth(JSON.parse(localStorage.getItem('userAuth')))
     }, [])
 
-    // console.log(userAuth)
+    console.log(userAuth)
 
     return (
         <UserAuthContext.Provider value={{ userAuth, setUserAuth, setError, error, success, setSuccess }}>

@@ -33,7 +33,6 @@ exports.refreshToken = async (req, res) => {
             return res.status(403).json({ error: 'Refresh Token inválido!' })
         }
 
-
         jwt.verify(refreshToken, process.env.REFRESH_TOKEN, (err, user) => {
             if (err) return res.status(403).json({ error: 'refresh token inválido!' })
 

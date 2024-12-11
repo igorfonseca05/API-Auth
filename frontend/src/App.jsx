@@ -32,7 +32,7 @@ function App() {
 
   const { userAuth, error, success, setError, setSuccess } = useAuthContext()
 
-  const { verifiedUser, loading } = verifyToken()
+  // const { verifiedUser, loading } = verifyToken()
 
 
 
@@ -57,28 +57,24 @@ function App() {
 
   return (
     <>
-      {loading ?
-        <p style={{ paddingTop: '59px' }}>Verificando Token, aguarde!...</p>
-        :
-        <BrowserRouter>
-          <OverlayContextProvider>
-            <Overlay />
-            <ToastContainer></ToastContainer>
-            <Navbar />
-            <Routes>
-              <Route path={'/'} element={<Home />} />
-              <Route path={'/login'} element={!userAuth ? <LoginPage /> : <Home />} />
-              <Route path={'/signup'} element={<SignupPage />} />
+      <BrowserRouter>
+        <OverlayContextProvider>
+          <Overlay />
+          <ToastContainer></ToastContainer>
+          <Navbar />
+          <Routes>
+            <Route path={'/'} element={<Home />} />
+            <Route path={'/login'} element={!userAuth ? <LoginPage /> : <Home />} />
+            <Route path={'/signup'} element={<SignupPage />} />
 
-              {/* rotas protegidas */}
-              <Route element={<ProtectedRoute />}>
-                <Route path='/dashboard' element={<Dashboard />} />
-                <Route path='/profile' element={<Profile />} />
-              </Route>
-            </Routes>
-          </OverlayContextProvider>
-        </BrowserRouter>
-      }
+            {/* rotas protegidas */}
+            <Route element={<ProtectedRoute />}>
+              <Route path='/dashboard' element={<Dashboard />} />
+              <Route path='/profile' element={<Profile />} />
+            </Route>
+          </Routes>
+        </OverlayContextProvider>
+      </BrowserRouter>
     </>
   )
 }
