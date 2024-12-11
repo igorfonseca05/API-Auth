@@ -8,3 +8,11 @@ Content-Type: application/json
     "email": "igorfonseca@gmail.com"
 }
 ###
+POST http://localhost:3000/formUpdate
+Content-Type: application/json
+
+{
+    "emailAtual": "igorfonseca@gmail.com",
+    "novoEmail": "igorf@gmail.com"
+}
+###

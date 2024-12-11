@@ -19,6 +19,11 @@ mongoose.connect('mongodb://localhost:27017/user')
 
 
 app.get('/', async (req, res) => {
+    try {
+
+    } catch (error) {
+
+    }
     res.status(200).json({ message: 'Bem vindo ao servidor' })
 
 })
@@ -42,6 +47,26 @@ app.post('/form', async (req, res) => {
     }
 
 })
+app.post('/formUpdate', async (req, res) => {
+
+    try {
+
+        const { emailAtual, novoEmail } = req.body
+
+        const user = await userData.findOneAndUpdate({ email: emailAtual },
+            { email: novoEmail },
+            { new: true, runValidators: true }
+        )
+
+        if (user) return res.status(401).json({ message: 'Nome já adicionado' })
+
+        console.log('Dados atualizados com sucesso')
+
+    } catch (error) {
+        console.log(error)
+    }
+})
+
 
 
 app.on('conectou', () => {
