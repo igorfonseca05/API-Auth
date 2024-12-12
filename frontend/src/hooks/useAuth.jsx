@@ -96,7 +96,9 @@ function useAuth() {
                 credentials: 'include'
             })
 
-            if (!res.ok) throw new Error((await res.json()).message)
+            const userData = await res.json()
+
+            if (!res.ok) throw new Error((userData).message)
 
             setLoading(false)
             setUserAuth(null)

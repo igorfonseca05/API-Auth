@@ -8,6 +8,7 @@ import useAuth from '../../hooks/useAuth';
 
 const LoginPage = () => {
 
+    const [isMounted, setIsMounted] = useState(true)
     const { login, loading, error, success } = useAuth()
 
     const [user, setUser] = useState({
@@ -16,6 +17,10 @@ const LoginPage = () => {
     })
 
     const navigate = useNavigate()
+
+    function checkIfValid() {
+        if (!isMounted) return
+    }
 
     function handleChange(e) {
         setUser({
@@ -26,12 +31,19 @@ const LoginPage = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        checkIfValid()
         const success = await login(user)
 
         if (success) {
             setTimeout(() => navigate('/'), 2000)
         }
     }
+
+    useEffect(() => {
+        return () => {
+            setIsMounted(false)
+        }
+    }, [])
 
     // console.log(user)
 

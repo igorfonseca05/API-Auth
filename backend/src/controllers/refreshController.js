@@ -47,23 +47,35 @@ exports.refreshToken = async (req, res) => {
 }
 
 exports.signout = async (req, res) => {
-    const refresh = req.cookies.refresh_token || req.headers.authorization?.replace('Bearer ', '')
 
     try {
+        const tokenSentByCookie = req.cookies.refresh_token
+        const tokenSentByHeader = req.headers.authorization?.replace('Bearer ', '')
 
-        console.log(userData)
+        const refresh = tokenSentByCookie || tokenSentByHeader
 
-        // userData.refreshTokens = [...userData.refreshTokens].filter(token => token !== refresh)
-        // await user.save()
+        if (!refresh) {
+            return res.status(400).json({ error: 'Refresh token não fornecido' });
+        }
 
-        // res.clearCookie('refresh_token', {
-        //     path: '/',
-        //     httpOnly: true,
-        //     secure: true,
-        //     sameSite: 'strict'
-        // })
+        const userInfoDecoded = jwt.verify(refresh, process.env.REFRESH_TOKEN)
 
-        // console.log("saiu")
+        const userData = await User.findOne(userInfoDecoded.id)
+        if (!userData) {
+            return res.status(404).json({ error: 'Usuário não encontrado' })
+        }
+
+        userData.refreshTokens = userData.refreshTokens
+            .filter(token => token !== refresh)
+
+        await user.save()
+
+        res.clearCookie('refresh_token', {
+            path: '/',
+            httpOnly: true,
+            secure: true,
+            sameSite: 'strict'
+        })
 
     } catch (error) {
         console.log(error.message)

@@ -16,14 +16,14 @@ function Dropdown({ dropIsOpen, setDropIsOpen }) {
 
 
     async function handleSignOut() {
-        setDropIsOpen(!dropIsOpen)
         const success = await signOut()
 
         if (success) {
-            navigate('/login')
+            return navigate('/login')
         }
-    }
 
+        setDropIsOpen(!dropIsOpen)
+    }
 
     function handleEditOption() {
         setOverlayIsOpen(!overlayIsOpen)
@@ -48,7 +48,7 @@ function Dropdown({ dropIsOpen, setDropIsOpen }) {
         <div ref={dropDown} className={`drop_container ${dropIsOpen ? 'open' : 'close'}`}>
             <div className='dropdown-item' onClick={handleEditOption}>Editar</div>
             <div className='dropdown-item' onClick={() => setDropIsOpen(!dropIsOpen)}>Configurações</div>
-            <div className='dropdown-item'><NavLink onClick={() => handleSignOut()}>Sair</NavLink></div>
+            <div className='dropdown-item'><NavLink onClick={handleSignOut}>Sair</NavLink></div>
         </div>
     )
 }
