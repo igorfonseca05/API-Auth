@@ -23,7 +23,7 @@ export function UserAuthContextProvider({ children }) {
         setUserAuth(JSON.parse(localStorage.getItem('userAuth')))
     }, [])
 
-    console.log(userAuth)
+    // console.log(userAuth)
 
     return (
         <UserAuthContext.Provider value={{ userAuth, setUserAuth, setError, error, success, setSuccess }}>

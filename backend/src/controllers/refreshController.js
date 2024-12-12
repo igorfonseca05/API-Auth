@@ -53,7 +53,6 @@ exports.signout = async (req, res) => {
         const tokenSentByHeader = req.headers.authorization?.replace('Bearer ', '')
 
         const refresh = tokenSentByCookie || tokenSentByHeader
-
         if (!refresh) {
             return res.status(400).json({ error: 'Refresh token não fornecido' });
         }
@@ -65,9 +64,7 @@ exports.signout = async (req, res) => {
             return res.status(404).json({ error: 'Usuário não encontrado' })
         }
 
-        userData.refreshTokens = userData.refreshTokens
-            .filter(token => token !== refresh)
-
+        userData.refreshTokens = userData.refreshTokens.filter(token => token !== refresh)
         await user.save()
 
         res.clearCookie('refresh_token', {
@@ -76,6 +73,8 @@ exports.signout = async (req, res) => {
             secure: true,
             sameSite: 'strict'
         })
+
+        return res.status(200).json({ message: 'Logout realizado com sucesso!' });
 
     } catch (error) {
         console.log(error.message)
