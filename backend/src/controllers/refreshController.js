@@ -38,7 +38,22 @@ exports.refreshToken = async (req, res) => {
 
             const newAcessToken = jwt.sign({ username: user.name }, process.env.ACESS_TOKEN, { expiresIn: '15min' })
 
-            res.status(200).json({ accessToken: newAcessToken })
+            res.status(200).json({
+                status: 'success',
+                message: 'Access token gerado com sucesso',
+                statusCode: res.statusCode,
+                ok: true,
+                user: {
+                    id: user._id,
+                    name: user.name,
+                    email: user.email,
+                    role: user.role || '',
+                    avatarUrl: user.avatarUrl || '',
+                    createdAt: user.createdAt,
+                    lastLogin: new Date()
+                },
+                access_token: newAcessToken,
+            })
         })
 
     } catch (error) {
