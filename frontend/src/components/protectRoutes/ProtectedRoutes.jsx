@@ -4,7 +4,7 @@ import verifyToken from '../../hooks/useVerifyToken'
 
 function ProtectedRoute() {
 
-    // console.log(isValid)
+
 
     const isValid = localStorage.getItem('userAuth')
 

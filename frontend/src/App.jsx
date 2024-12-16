@@ -34,6 +34,8 @@ function App() {
 
   // const { verifiedUser, loading } = verifyToken()
 
+  // console.log(userAuth)
+
 
 
   useEffect(() => {
