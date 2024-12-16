@@ -2,8 +2,9 @@ import { useState, useEffect } from 'react'
 import { useNavigate, Outlet, Navigate } from 'react-router-dom'
 import verifyToken from '../../hooks/useVerifyToken'
 
-function ProtectedRoute() {
+import { fetchWithAuth } from '../../hooks/useAccessToken'
 
+async function ProtectedRoute() {
 
 
     const isValid = localStorage.getItem('userAuth')

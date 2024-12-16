@@ -19,3 +19,27 @@ exports.verifyUserToken = (req, res) => {
         }
     })
 }
+
+exports.accessToken = (req, res) => {
+    try {
+        const accessToken = req.headers.authorization?.replace('Bearer ', '')
+
+        if (!accessToken) return res.status(401).json({ error: 'Access Token não enviado' })
+
+
+        jwt.verify(accessToken, process.env.JWT_ACCESS_TOKEN, (err, user) => {
+            if (err) return res.status(404).json({ error: 'Access token inválido' })
+
+            res.status(200).json({
+                status: 'success',
+                message: 'Token válido',
+                statusCode: res.statusCode,
+                ok: true,
+            })
+        })
+
+
+    } catch (error) {
+        res.status(404).json({ error })
+    }
+}
