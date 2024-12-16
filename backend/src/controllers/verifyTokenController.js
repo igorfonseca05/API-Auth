@@ -24,8 +24,6 @@ exports.accessToken = (req, res) => {
     try {
         const accessToken = req.headers.authorization?.replace('Bearer ', '')
 
-        console.log(accessToken)
-
         if (!accessToken) return res.status(401).json({ error: 'Access Token não enviado' })
 
         jwt.verify(accessToken, process.env.JWT_ACCESS_TOKEN, (err, user) => {

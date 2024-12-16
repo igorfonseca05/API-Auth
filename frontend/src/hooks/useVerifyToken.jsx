@@ -17,16 +17,18 @@ function verifyToken() {
             setError('')
             setLoading(true)
 
-            const user = JSON.parse(localStorage.getItem('userAuth'))
+
+            // console.log(user.access_token)
 
             try {
+                const user = JSON.parse(localStorage.getItem('userAuth'))
+
                 const res = await fetch('http://localhost:3100/accessToken', {
                     method: 'POST',
                     headers: {
-                        "Content-type": "application/json"
-                    },
-                    Authorization: `Bearer ${user.access_token}`,
-                    credentials: "include"
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${user.access_token}`,
+                    }
                 })
 
                 if (!res.ok) {
@@ -35,7 +37,7 @@ function verifyToken() {
 
                 const userData = await res.json()
 
-                console.log(userData)
+                console.log(res)
                 // setVerifiedUser(userData)
                 // setLoading(false)
             } catch (error) {
