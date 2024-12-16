@@ -9,18 +9,23 @@ function verifyToken() {
     const [verifiedUser, setVerifiedUser] = useState(false)
     const [loading, setLoading] = useState(false)
 
+    // console.log(localStorage.getItem())
+
 
     useEffect(() => {
         async function analyseToken() {
             setError('')
             setLoading(true)
 
+            const user = JSON.parse(localStorage.getItem('userAuth'))
+
             try {
-                const res = await fetch('http://localhost:3100/validate-token', {
+                const res = await fetch('http://localhost:3100/accessToken', {
                     method: 'POST',
                     headers: {
                         "Content-type": "application/json"
                     },
+                    Authorization: `Bearer ${user.access_token}`,
                     credentials: "include"
                 })
 
@@ -29,11 +34,14 @@ function verifyToken() {
                 }
 
                 const userData = await res.json()
-                setVerifiedUser(userData)
-                setLoading(false)
+
+                console.log(userData)
+                // setVerifiedUser(userData)
+                // setLoading(false)
             } catch (error) {
-                localStorage.removeItem('userAuth')
-                setError(error.message)
+                console.log(error)
+                // localStorage.removeItem('userAuth')
+                // setError(error.message)
                 // setError(error.message)
             } finally {
                 setLoading(false)

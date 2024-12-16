@@ -32,11 +32,13 @@ function App() {
 
   const { userAuth, error, success, setError, setSuccess } = useAuthContext()
 
-  // const { verifiedUser, loading } = verifyToken()
+  const { verifiedUser, loading } = verifyToken()
 
   // console.log(userAuth)
 
   // console.log(localStorage.length)
+
+  // console.log(JSON.parse(localStorage.getItem('userAuth')))
 
 
   useEffect(() => {

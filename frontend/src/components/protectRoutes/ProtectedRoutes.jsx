@@ -4,8 +4,7 @@ import verifyToken from '../../hooks/useVerifyToken'
 
 import { fetchWithAuth } from '../../hooks/useAccessToken'
 
-async function ProtectedRoute() {
-
+function ProtectedRoute() {
 
     const isValid = localStorage.getItem('userAuth')
 

@@ -24,8 +24,9 @@ exports.accessToken = (req, res) => {
     try {
         const accessToken = req.headers.authorization?.replace('Bearer ', '')
 
-        if (!accessToken) return res.status(401).json({ error: 'Access Token não enviado' })
+        console.log(accessToken)
 
+        if (!accessToken) return res.status(401).json({ error: 'Access Token não enviado' })
 
         jwt.verify(accessToken, process.env.JWT_ACCESS_TOKEN, (err, user) => {
             if (err) return res.status(404).json({ error: 'Access token inválido' })
@@ -35,11 +36,12 @@ exports.accessToken = (req, res) => {
                 message: 'Token válido',
                 statusCode: res.statusCode,
                 ok: true,
+                user
             })
         })
 
 
     } catch (error) {
-        res.status(404).json({ error })
+        console.log(error)
     }
 }
