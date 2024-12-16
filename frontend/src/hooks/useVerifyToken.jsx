@@ -17,9 +17,6 @@ function verifyToken() {
             setError('')
             setLoading(true)
 
-
-            // console.log(user.access_token)
-
             try {
                 const user = JSON.parse(localStorage.getItem('userAuth'))
 
@@ -30,14 +27,14 @@ function verifyToken() {
                         Authorization: `Bearer ${user.access_token}`,
                     }
                 })
-
-                if (!res.ok) {
-                    throw new Error((await res.json()).message)
-                }
-
-                const userData = await res.json()
-
                 console.log(res)
+
+                // if (!res.ok) {
+                //     throw new Error((await res.json()).message)
+                // }
+
+                // const userData = await res.json()
+
                 // setVerifiedUser(userData)
                 // setLoading(false)
             } catch (error) {

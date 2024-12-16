@@ -21,6 +21,7 @@ exports.verifyUserToken = (req, res) => {
 }
 
 exports.accessToken = (req, res) => {
+
     try {
         const accessToken = req.headers.authorization?.replace('Bearer ', '')
 
@@ -37,7 +38,6 @@ exports.accessToken = (req, res) => {
                 user
             })
         })
-
 
     } catch (error) {
         console.log(error)
