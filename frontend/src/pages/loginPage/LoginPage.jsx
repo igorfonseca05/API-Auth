@@ -88,7 +88,6 @@ const LoginPage = () => {
                     <div className='separate'>
                         <hr />
                         <p>ou</p>
-                        <hr />
                     </div>
                 </form>
             </div>
