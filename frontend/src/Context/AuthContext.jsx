@@ -15,7 +15,13 @@ export function UserAuthContextProvider({ children }) {
 
     // Salvando dados usuário no localStorage
     useEffect(() => {
-        userAuth && localStorage.setItem('userAuth', JSON.stringify(userAuth))
+        if (userAuth) {
+            localStorage.setItem('userAuth', JSON.stringify(userAuth))
+            return
+        }
+
+        // localStorage.removeItem('userAuth')
+
     }, [userAuth])
 
     // Obtendo dados do localStorage caso ele já exista
