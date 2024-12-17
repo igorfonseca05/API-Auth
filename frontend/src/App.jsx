@@ -32,7 +32,9 @@ function App() {
 
   const { userAuth, error, success, setError, setSuccess } = useAuthContext()
 
-  const { verifiedUser, loading } = verifyToken()
+  if (localStorage.length) {
+    const { verifiedUser, loading } = verifyToken()
+  }
 
   // console.log(userAuth)
 

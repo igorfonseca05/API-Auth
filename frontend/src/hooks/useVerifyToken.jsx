@@ -22,7 +22,7 @@ function verifyToken() {
 
                 console.log('oi')
 
-                const res = await fetch('http://localhost:3100/verify-accessToken', {
+                const res = await fetch('http://localhost:3100/verifyToken', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -30,13 +30,12 @@ function verifyToken() {
                     }
                 })
 
-                console.log(res)
+                if (!res.ok) {
+                    throw new Error((await res.json()).message)
+                }
 
-                // if (!res.ok) {
-                //     throw new Error((await res.json()).message)
-                // }
-
-                // const userData = await res.json()
+                const userData = await res.json()
+                console.log(userData)
 
                 // setVerifiedUser(userData)
                 // setLoading(false)
