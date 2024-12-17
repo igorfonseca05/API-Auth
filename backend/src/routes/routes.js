@@ -22,7 +22,7 @@ routes.get('/', homeController.home)
 // Rotas para sistema de cadastro e login
 routes.post('/signup', validation, authController.signUp)
 routes.post('/login', loginValidator, authController.login)
-routes.post('/signout', refreshController.signout)
+routes.post('/signout', authController.signout)
 routes.post('/refresh-token', refreshController.refreshToken)
 routes.post('/verifyToken', verifyTokenController.accessToken)
 routes.post('/validate-token', verifyToken, verifyTokenController.verifyUserToken)

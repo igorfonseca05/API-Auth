@@ -75,25 +75,26 @@ exports.signout = async (req, res) => {
         const userInfoDecoded = jwt.verify(refresh, process.env.JWT_TOKEN)
 
 
-        const userData = await User.findOne(userInfoDecoded.id)
+        const userData = await User.findById(userInfoDecoded.id)
         if (!userData) {
             return res.status(404).json({ error: 'Usuário não encontrado' })
         }
 
-        userData.refreshTokens = userData.refreshTokens.filter(token => token !== refresh)
-        await user.save()
+        userData.refreshTokens = [...userData.refreshTokens].filter(token => token !== refresh)
+        await userData.save()
 
         res.clearCookie('refresh_token', {
+            path: '/',
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production', // Apenas true em produção
-            sameSite: 'strict',
-            path: '/' // Adicione o mesmo path padrão
-        });
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'strict'
+        })
 
 
         return res.status(200).json({ message: 'Logout realizado com sucesso!' });
 
     } catch (error) {
         res.json({ error: error.message })
+        console.log(error)
     }
 }

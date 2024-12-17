@@ -58,10 +58,6 @@ exports.signUp = async (req, res) => {
                     avatarUrl: user.avatarUrl || '',
                     createdAt: user.createdAt,
                     lastLoginAt: Date.now()
-                },
-                session: {
-                    ipAddress: req.ip,
-                    device: req.header['user-agent'],
                 }
             })
 
@@ -118,6 +114,10 @@ exports.login = async (req, res) => {
 
         refreshTokenContainer.push(refreshToken)
 
+        if (refreshTokenContainer.length >= 4) {
+            refreshTokenContainer.shift()
+        }
+
         try {
             user.refreshTokens = [...refreshTokenContainer]
             await user.save()
@@ -167,45 +167,46 @@ exports.login = async (req, res) => {
 }
 
 
-// exports.refresh = async (req, res) => {
-//     try {
-
-//         const refresh = req.cookie.refresh_token || req.headers.authorization?.replace('Bearer ', '')
-
-//     } catch (error) {
-
-//     }
-// }
-
-
 // END-POINT DE SIGNOUT
-exports.signout = (req, res) => {
+exports.signout = async (req, res) => {
 
     try {
+        const tokenSentByCookie = req.cookies.refresh_token
+        const tokenSentByHeader = req.headers.authorization?.replace('Bearer ', '')
 
-        res.clearCookie('auth_token', {
+        const refresh = tokenSentByCookie || tokenSentByHeader
+        if (!refresh) {
+            return res.status(400).json({ error: 'Refresh token não fornecido' });
+        }
+
+        const userInfoDecoded = jwt.verify(refresh, process.env.JWT_TOKEN)
+
+
+        const userData = await User.findById(userInfoDecoded.id)
+        if (!userData) {
+            return res.status(404).json({ error: 'Usuário não encontrado' })
+        }
+
+        userData.refreshTokens = [...userData.refreshTokens].filter(token => token !== refresh)
+
+
+        await userData.save()
+
+        // console.log(userData.refreshTokens, refreshTokenContainer)
+
+        res.clearCookie('refresh_token', {
             path: '/',
             httpOnly: true,
-            secure: true,
+            secure: process.env.NODE_ENV === 'production',
             sameSite: 'strict'
         })
 
-        res.status(200).json({
-            status: 'success',
-            message: 'Logout realizado com sucesso',
-            statusCode: res.statusCode,
-            ok: true,
-        }
-        )
+
+        return res.status(200).json({ message: 'Logout realizado com sucesso!' });
 
     } catch (error) {
-        res.status(500).json({
-            status: 'Error',
-            message: 'Erro ao fazer logout. Tente novamente mais tarde.',
-            statusCode: res.statusCode,
-            ok: false,
-        }
-        )
+        res.json({ error: error.message })
+        console.log(error)
     }
 }
 
