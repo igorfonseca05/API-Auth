@@ -41,7 +41,7 @@ exports.signUp = async (req, res) => {
 
         res.cookie('auth_token', token, {
             httpOnly: true,
-            secure: true,
+            secure: process.env.NODE_ENV === 'production', // Apenas true em produção
             sameSite: 'strict',
             maxAge: 60 * 60 * 1000
         }).status(200)
@@ -130,7 +130,7 @@ exports.login = async (req, res) => {
 
         res.cookie('refresh_token', refreshToken, {
             httpOnly: true,
-            secure: true,
+            secure: process.env.NODE_ENV === 'production', // Apenas true em produção
             sameSite: 'strict',
             maxAge: 60 * 60 * 1000
         }).status(200).json({

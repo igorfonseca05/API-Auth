@@ -72,7 +72,8 @@ exports.signout = async (req, res) => {
             return res.status(400).json({ error: 'Refresh token não fornecido' });
         }
 
-        const userInfoDecoded = jwt.verify(refresh, process.env.REFRESH_TOKEN)
+        const userInfoDecoded = jwt.verify(refresh, process.env.JWT_TOKEN)
+
 
         const userData = await User.findOne(userInfoDecoded.id)
         if (!userData) {
@@ -83,15 +84,16 @@ exports.signout = async (req, res) => {
         await user.save()
 
         res.clearCookie('refresh_token', {
-            path: '/',
             httpOnly: true,
-            secure: true,
-            sameSite: 'strict'
-        })
+            secure: process.env.NODE_ENV === 'production', // Apenas true em produção
+            sameSite: 'strict',
+            path: '/' // Adicione o mesmo path padrão
+        });
+
 
         return res.status(200).json({ message: 'Logout realizado com sucesso!' });
 
     } catch (error) {
-        console.log(error.message)
+        res.json({ error: error.message })
     }
 }

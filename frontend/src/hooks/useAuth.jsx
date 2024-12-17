@@ -104,8 +104,8 @@ function useAuth() {
 
 
             // setLoading(false)
-            // setUserAuth(null)
-            // localStorage.removeItem('userAuth')
+            setUserAuth(null)
+            localStorage.removeItem('userAuth')
             return true
 
         } catch (error) {

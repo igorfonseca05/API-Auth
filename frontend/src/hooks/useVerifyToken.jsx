@@ -20,8 +20,6 @@ function verifyToken() {
             try {
                 const user = JSON.parse(localStorage.getItem('userAuth'))
 
-                console.log('oi')
-
                 const res = await fetch('http://localhost:3100/verifyToken', {
                     method: 'POST',
                     headers: {
@@ -35,14 +33,12 @@ function verifyToken() {
                 }
 
                 const userData = await res.json()
-                console.log(userData)
-
                 // setVerifiedUser(userData)
                 // setLoading(false)
             } catch (error) {
                 console.log(error)
-                // localStorage.removeItem('userAuth')
-                // setError(error.message)
+                localStorage.removeItem('userAuth')
+                setError(error.message)
                 // setError(error.message)
             } finally {
                 setLoading(false)
