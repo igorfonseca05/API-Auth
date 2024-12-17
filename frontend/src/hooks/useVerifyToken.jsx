@@ -20,13 +20,16 @@ function verifyToken() {
             try {
                 const user = JSON.parse(localStorage.getItem('userAuth'))
 
-                const res = await fetch('http://localhost:3100/accessToken', {
+                console.log('oi')
+
+                const res = await fetch('http://localhost:3100/verify-accessToken', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        Authorization: `Bearer ${user.access_token}`,
+                        Authorization: `Bearer ${user.access_token}`
                     }
                 })
+
                 console.log(res)
 
                 // if (!res.ok) {

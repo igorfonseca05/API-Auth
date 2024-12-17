@@ -28,6 +28,7 @@ app.use(cookieParser())
 app.use(cors({
     origin: 'http://localhost:5173', // Permite solicitações do frontend
     credentials: true,
+    allowedHeaders: ['Content-Type', 'Authorization']
 }))
 // app.use(pinoHttp({ logger }));
 

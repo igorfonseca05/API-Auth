@@ -62,7 +62,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NDcyMmMwY
 ###
 ###
 
-POST http://localhost:3100/accessToken
+POST http://localhost:3100/verify-accessToken
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NDcyMmMwYzM0NGZiYzBkYWJiYmNmOSIsImVtYWlsIjoiaWdvcmZvbnNlY2EyN0Bob3RtYWlsLmNvbSIsImlhdCI6MTczMzkyNjIwOSwiZXhwIjoxNzM0NTMxMDA5fQ.70U-BeX-BMTgWWg-Pto3LVZ6sTpt3d2ciKke_J5IkxA
 

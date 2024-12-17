@@ -43,3 +43,12 @@ exports.accessToken = (req, res) => {
         console.log(error)
     }
 }
+
+exports.msg = (req, res) => {
+    res.status(200).json({
+        status: 'success',
+        message: 'oi',
+        statusCode: res.statusCode,
+        ok: true,
+    })
+}
