@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './LoginPage.css'; // Importando o arquivo de estilo
 import { toast, ToastContainer } from 'react-toastify';
 
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import useAuth from '../../hooks/useAuth';
 
@@ -50,10 +50,14 @@ const LoginPage = () => {
     return (
         <div className="login-page page">
             <div className="login-form-container">
-                <h2>Login</h2>
+                <div className="formTitle">
+                    <h2>Bem vindo de volta</h2>
+                    <p>Não possui conta? <Link to="/signup">SignUp</Link></p>
+                </div>
                 <form onSubmit={handleSubmit}>
                     <div className="input-group">
-                        <label htmlFor="email">Email</label>
+                        {/* <label htmlFor="email">Email</label> */}
+                        <span className='material-symbols-outlined icon_input'>email</span>
                         <input
                             type="email"
                             id="email"
@@ -66,7 +70,8 @@ const LoginPage = () => {
                         />
                     </div>
                     <div className="input-group">
-                        <label htmlFor="password">Senha</label>
+                        {/* <label htmlFor="password">Senha</label> */}
+                        <span className='material-symbols-outlined icon_input'>password</span>
                         <input
                             type="password"
                             id="password"
@@ -80,14 +85,12 @@ const LoginPage = () => {
                     </div>
                     <button type="submit" className="login-btn" disabled={loading}>
                         {loading ? 'Carregando...' : 'Login'}</button>
+                    <div className='separate'>
+                        <hr />
+                        <p>ou</p>
+                        <hr />
+                    </div>
                 </form>
-            </div>
-            <div className="info-container">
-                <h3>Bem-vindo ao LOGOBAKERY!</h3>
-                <p>
-                    Somos uma empresa dedicada a oferecer os melhores produtos de confeitaria e padaria para você.
-                    Entre em nossa plataforma para acessar nossos produtos exclusivos!
-                </p>
             </div>
         </div>
     );

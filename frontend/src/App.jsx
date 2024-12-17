@@ -36,13 +36,6 @@ function App() {
     const { verifiedUser, loading } = verifyToken()
   }
 
-  // console.log(userAuth)
-
-  // console.log(localStorage.length)
-
-  // console.log(JSON.parse(localStorage.getItem('userAuth')))
-
-
   useEffect(() => {
     error && toast.error(error, {
       autoClose: 2500,
@@ -52,6 +45,7 @@ function App() {
       autoClose: 2500,
       position: 'top-left'
     })
+
     error && setError('')
     success && setSuccess('')
 

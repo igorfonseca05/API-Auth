@@ -8,6 +8,7 @@ const bcrypt = require('bcrypt')
 const secretToken = process.env.JWT_TOKEN
 
 let refreshTokenContainer = []
+const MAX_REFRESH_TOKENS = 4
 
 
 // END-POINT DE CADASTRO
@@ -112,12 +113,15 @@ exports.login = async (req, res) => {
         const acessToken = await jwt.sign({ id: user._id, email: user.email }, process.env.JWT_ACCESS_TOKEN, { expiresIn: '15m' })
         const refreshToken = await jwt.sign({ id: user._id, email: user.email }, secretToken, { expiresIn: '7d' })
 
+        // Adicionando token ao array de tokens
         refreshTokenContainer.push(refreshToken)
 
-        if (refreshTokenContainer.length >= 4) {
+        // Controlando quantidade de tokens do usuário
+        if (refreshTokenContainer.length >= MAX_REFRESH_TOKENS) {
             refreshTokenContainer.shift()
         }
 
+        // Salvando os tokens aos dados do usuário na base de dados
         try {
             user.refreshTokens = [...refreshTokenContainer]
             await user.save()
@@ -128,6 +132,7 @@ exports.login = async (req, res) => {
         }
 
 
+        // Respondendo ao Usuário
         res.cookie('refresh_token', refreshToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production', // Apenas true em produção
