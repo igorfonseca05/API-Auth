@@ -48,8 +48,9 @@ const LoginPage = () => {
     // console.log(user)
 
     return (
-        <div className="login-page page">
-            <div className="login-form-container">
+        <div className="form-page page">
+            {/* <span className='material-symbols-outlined'>home</span> */}
+            <div className="login-form-container form-container ">
                 <div className="formTitle">
                     <h2>Bem vindo de volta</h2>
                     <p>Não possui conta? <Link to="/signup">SignUp</Link></p>
@@ -87,6 +88,10 @@ const LoginPage = () => {
                         {loading ? 'Carregando...' : 'Login'}</button>
                     <div className='separate'>
                         <p>ou</p>
+                    </div>
+                    <div className='buttons_container'>
+                        <button><img src="google.svg" alt="" /></button>
+                        <button><img src="git.svg" alt="" /></button>
                     </div>
                 </form>
             </div>

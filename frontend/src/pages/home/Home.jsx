@@ -2,15 +2,28 @@ import React from 'react';
 import './Home.css'; // Arquivo CSS para estilizar a Home
 import { useAuthContext } from '../../Context/AuthContext';
 
+import Navbar from '../../components/navbar/Navbar'
+
 const Home = () => {
 
     const { userAuth } = useAuthContext()
 
     return (
-        <div className="home-container page">
-            <h1 className="home-title">Bem-vindo {userAuth?.user ? userAuth.user.name : "ao nosso site"}</h1>
-            <p className="home-description">Este é um exemplo de página inicial. Use o menu acima para navegar para Login ou Signup.</p>
-        </div>
+        <>
+            <section className="hero">
+                <div className="hero-content home-container page">
+                    <h1>Bem-vindo à nossa plataforma {userAuth?.user ? userAuth.user.name : "ao nosso site"}</h1>
+                    <p>Gerencie suas credenciais de forma simples, segura e intuitiva.</p>
+                    <a href="signup" className="btn-primary">Comece Agora</a>
+                </div>
+                <div className="hero-image">
+                    <img src="https://via.placeholder.com/400x300" alt="Hero" />
+                </div>
+            </section>
+            <div className="home-container page">
+
+            </div>
+        </>
     );
 };
 

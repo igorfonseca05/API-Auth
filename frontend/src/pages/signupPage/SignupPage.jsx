@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import './SignUpPage.css'; // Importando o arquivo de estilo
 
 // import useSignup from '../../hooks/useSignup';
@@ -54,13 +54,16 @@ const SignUpPage = () => {
     // }, [error, success])
 
     return (
-        <div className="signup-page page">
+        <div className="form-page page">
             {/* <ToastContainer></ToastContainer> */}
-            <div className="signup-form-container">
-                <h2>Cadastro</h2>
+            <div className="form-container">
+                <div className="formTitle">
+                    <h2>Cadastre-se Agora</h2>
+                    <p>Já oossui conta? <Link to="/login">SignIn</Link></p>
+                </div>
                 <form onSubmit={handleSubmit}>
                     <div className="input-group">
-                        <label htmlFor="name">Nome</label>
+                        <span className='material-symbols-outlined icon_input'>person</span>
                         <input
                             type="text"
                             id="name"
@@ -72,7 +75,7 @@ const SignUpPage = () => {
                         />
                     </div>
                     <div className="input-group">
-                        <label htmlFor="email">Email</label>
+                        <span className='material-symbols-outlined icon_input'>mail</span>
                         <input
                             type="email"
                             id="email"
@@ -84,9 +87,9 @@ const SignUpPage = () => {
                         />
                     </div>
                     <div className="input-group">
-                        <label htmlFor="password">Senha</label>
+                        <span className='material-symbols-outlined icon_input'>lock</span>
                         <input
-                            type="password"
+                            type="lock"
                             id="password"
                             value={user.password}
                             onChange={(e) => handleChange(e)}
@@ -96,7 +99,7 @@ const SignUpPage = () => {
                         />
                     </div>
                     <div className="input-group">
-                        <label htmlFor="confirm-password">Confirmar Senha</label>
+                        <span className='material-symbols-outlined icon_input'>lock</span>
                         <input
                             type="password"
                             id="confirm-password"
@@ -107,17 +110,16 @@ const SignUpPage = () => {
                             name='confirmPassword'
                         />
                     </div>
-                    <button type="submit" className="signup-btn" disabled={loading}>
+                    <button type="submit" className="login-btn" disabled={loading}>
                         {loading ? 'Carregando...' : "Cadastrar"}
                     </button>
+                    <div className='separate'>
+                        <p>ou</p>
+                    </div>
+                    <div className='buttons_container'>
+                        <button><img src="google.svg" alt="" />Login com google</button>
+                    </div>
                 </form>
-            </div>
-            <div className="info-container">
-                <h3>Bem-vindo à nossa comunidade!</h3>
-                <p>
-                    Ao criar uma conta conosco, você terá acesso a uma plataforma exclusiva de produtos frescos e deliciosos,
-                    preparados especialmente para você. Não perca a chance de explorar nossa variedade de itens e promoções!
-                </p>
             </div>
         </div>
     );

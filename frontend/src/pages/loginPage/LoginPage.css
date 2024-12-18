@@ -1,9 +1,9 @@
 /* Container principal para a página de login */
-.login-page {
+.form-page {
     display: flex;
     /* width: 80%; */
     height: 100vh;
-    border-radius: 8px;
+    /* border-radius: 8px; */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     justify-content: center;
     align-items: center;
@@ -11,26 +11,6 @@
     background-size: cover;
 }
 
-/* Estilo do formulário de login (metade esquerda) */
-.login-form-container {
-    min-width: 350px;
-    max-width: 400px;
-    padding: 20px 20px;
-    background-color: #242424;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    /* height: 350px; */
-    /* box-shadow: 0px 0px 8px rgba(185, 249, 252, 0.11); */
-    border-radius: 16px;
-    /* border: 0.2px solid; */
-    border-top-style: ridge;
-    border-top-color: rgba(121, 121, 121, 0.164);
-    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
-    /* border-color: linear-gradient(0deg, #121b24 0%, #f7f7f7 100%); */
-
-
-}
 
 .formTitle {
     /* background-color: rebeccapurple; */
@@ -102,7 +82,7 @@
 
 .login-btn {
     width: 100%;
-    padding: 12px;
+    padding: 8px 0px;
     background-color: #00bcd4;
     color: white;
     border: none;
@@ -173,4 +153,27 @@
     position: absolute;
     top: 12px;
     left: 24px;
+}
+
+.buttons_container {
+    display: flex;
+    column-gap: 12px;
+}
+
+.buttons_container button {
+    width: 50%;
+    padding: 8px 0px;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
+    background-color: #383838;
+    /* column-gap: 2px; */
+    transition: all 0.2s cubic-bezier(0.455, 0.03, 0.515, 0.955);
+}
+
+.buttons_container button:hover {
+    background-color: rgb(51, 51, 51);
+}
+
+.buttons_container button img {
+    width: 20px;
+    height: 20px;
 }
