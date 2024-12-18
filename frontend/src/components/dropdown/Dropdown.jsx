@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useOverlayContext } from '../../Context/OverlayContext'
 import { useNavigate, NavLink } from 'react-router-dom'
 
@@ -40,15 +40,17 @@ function Dropdown({ dropIsOpen, setDropIsOpen }) {
         dropDown.current.style.height = `${dropItemsAmount * dropItemsHeight}px`
     }
 
-    if (dropIsOpen) {
-        dropHeight()
-    }
+    useEffect(() => {
+        if (dropIsOpen) {
+            dropHeight()
+        }
+    }, [dropIsOpen])
 
     return (
         <div ref={dropDown} className={`drop_container ${dropIsOpen ? 'open' : 'close'}`}>
             <div className='dropdown-item' onClick={handleEditOption}>Editar</div>
             <div className='dropdown-item' onClick={() => setDropIsOpen(!dropIsOpen)}>Configurações</div>
-            <div className='dropdown-item'><NavLink onClick={handleSignOut}>Sair</NavLink></div>
+            <div className='dropdown-item'><NavLink onClick={() => handleSignOut()}>Sair</NavLink></div>
         </div>
     )
 }

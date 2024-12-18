@@ -74,6 +74,8 @@ exports.login = async (req, res) => {
 
     // req.log.info(req.body.email, 'Dados de Login recebidos via POST')
 
+    // console.log('aqui')
+
     try {
         const { email, password } = req.body
 
