@@ -63,7 +63,7 @@ const LoginPage = () => {
                             id="email"
                             value={user.email}
                             onChange={(e) => handleChange(e)}
-                            placeholder="Digite seu e-mail"
+                            placeholder="E-mail"
                             required
                             name='email'
                             autoComplete='on'
@@ -77,7 +77,7 @@ const LoginPage = () => {
                             id="password"
                             value={user.password}
                             onChange={(e) => handleChange(e)}
-                            placeholder="Digite sua senha"
+                            placeholder="Senha"
                             required
                             name='password'
                             autoComplete='current-password'
@@ -86,7 +86,6 @@ const LoginPage = () => {
                     <button type="submit" className="login-btn" disabled={loading}>
                         {loading ? 'Carregando...' : 'Login'}</button>
                     <div className='separate'>
-                        <hr />
                         <p>ou</p>
                     </div>
                 </form>

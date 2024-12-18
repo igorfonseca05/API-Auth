@@ -7,7 +7,7 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     justify-content: center;
     align-items: center;
-    background-image: url('bg.png');
+    background-image: url('bg2.png');
     background-size: cover;
 }
 
@@ -16,13 +16,18 @@
     min-width: 350px;
     max-width: 400px;
     padding: 20px 20px;
-    background-color: #1f1f1f;
+    background-color: #242424;
     display: flex;
     flex-direction: column;
     justify-content: center;
     /* height: 350px; */
-    box-shadow: 0px 0px 3px rgb(0, 191, 197);
-    border-radius: 8px;
+    /* box-shadow: 0px 0px 8px rgba(185, 249, 252, 0.11); */
+    border-radius: 16px;
+    /* border: 0.2px solid; */
+    border-top-style: ridge;
+    border-top-color: rgba(121, 121, 121, 0.164);
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
+    /* border-color: linear-gradient(0deg, #121b24 0%, #f7f7f7 100%); */
 
 
 }
@@ -60,7 +65,7 @@
     justify-content: center;
     align-items: center;
     position: relative;
-    background-color: #313131;
+    background-color: #1d1d1d;
     width: 100%;
     /* padding: 10px; */
     font-size: 16px;
@@ -104,6 +109,7 @@
     border-radius: 4px;
     font-size: 16px;
     cursor: pointer;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
 }
 
 .login-btn:hover {
@@ -135,9 +141,36 @@
 .separate {
     position: relative;
     display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    flex-grow: 1;
+    justify-content: center;
     width: 100% !important;
-    margin: var(--m-6) 0px;
+    margin: var(--m-4) 0px;
+    overflow: hidden;
+}
+
+.separate p {
+    position: relative;
+    /* width: 100%; */
+    /* text-align: center; */
+    color: #747474;
+    font-weight: 600;
+}
+
+.separate p::before {
+    content: '';
+    width: 100vw;
+    height: 1.4px;
+    background: #383838;
+    position: absolute;
+    top: 12px;
+    right: 24px;
+}
+
+.separate p::after {
+    content: '';
+    width: 100vw;
+    height: 1.4px;
+    background: #383838;
+    position: absolute;
+    top: 12px;
+    left: 24px;
 }
