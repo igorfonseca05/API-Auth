@@ -7,8 +7,6 @@ exports.accessToken = (req, res) => {
     try {
         const accessToken = req.headers.authorization?.replace('Bearer ', '')
 
-        // console.log(accessToken)
-
         if (!accessToken) {
             return res.status(401).json({
                 status: "error",
@@ -25,12 +23,12 @@ exports.accessToken = (req, res) => {
         jwt.verify(accessToken, process.env.JWT_ACCESS_TOKEN, (err, user) => {
             if (err) return res.status(401).json({
                 status: "error",
-                message: "Acess token não é válido",
+                message: "Acess token inválido ou expirado",
                 statusCode: res.statusCode,
                 ok: false,
                 error: {
                     type: "Unauthorized",
-                    details: "O access token enviado não coincide com o token gerado pelo servidor"
+                    details: "O access token enviado não coincide com o token gerado pelo servidor ou está expirado!"
                 }
             })
 
@@ -48,11 +46,3 @@ exports.accessToken = (req, res) => {
     }
 }
 
-exports.msg = (req, res) => {
-    res.status(200).json({
-        status: 'success',
-        message: 'oi',
-        statusCode: res.statusCode,
-        ok: true,
-    })
-}

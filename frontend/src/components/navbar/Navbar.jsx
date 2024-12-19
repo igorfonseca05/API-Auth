@@ -34,7 +34,7 @@ const Navbar = () => {
                             <figure>
                                 <img src="https://thumbs.dreamstime.com/b/opte-pelo-%C3%ADcone-do-perfil-avatar-placeholder-cinzento-da-foto-99724602.jpg" alt="" />
                             </figure>
-                            {userAuth?.user.name}
+                            {userAuth ? userAuth.user.name : 'User'}
                             <span className={`material-symbols-outlined dropIcon ${dropIsOpen && "rotate"}`}>
                                 keyboard_arrow_down
                             </span>

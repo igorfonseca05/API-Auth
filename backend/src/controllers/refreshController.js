@@ -20,23 +20,53 @@ let userData
 exports.refreshToken = async (req, res) => {
 
     try {
-        const refreshToken = req.cookies.refreshToken || req.headers.authorization?.replace('Bearer ', '')
+        const refreshToken = req.cookies.refresh_token || req.headers.authorization?.replace('Bearer ', '')
         const decoded = jwt.verify(refreshToken, process.env.JWT_TOKEN)
-
-        // console.log(decoded)
 
         const user = await User.findById(decoded.id)
 
-        if (!user) return res.status(403).json({ error: 'Usuário não encontrado' })
+        if (!user) return res.status(403).json({
+            status: "error",
+            message: "Usuário do refresh token não encontrado",
+            statusCode: res.statusCode,
+            ok: false,
+            error: {
+                type: "Unauthorized",
+                details: "O refresh token enviado não coincide com o nenhum usuário!"
+            }
+        })
+        console.log(user)
 
         if (!refreshToken || !user.refreshTokens.includes(refreshToken)) {
-            return res.status(403).json({ error: 'Refresh Token inválido!' })
+            return res.status(403).json({
+                status: "error",
+                message: "Refresh token inválido",
+                statusCode: res.statusCode,
+                ok: false,
+                error: {
+                    type: "Unauthorized",
+                    details: "O refresh token enviado não coincide com os cadastrado com o usuário!"
+                }
+            })
         }
 
-        jwt.verify(refreshToken, process.env.REFRESH_TOKEN, (err, user) => {
-            if (err) return res.status(403).json({ error: 'refresh token inválido!' })
+        // console.log(refreshToken)
 
-            const newAcessToken = jwt.sign({ username: user.name }, process.env.ACESS_TOKEN, { expiresIn: '15min' })
+        jwt.verify(refreshToken, process.env.JWT_TOKEN, (err, user) => {
+            if (err) {
+                return res.status(403).json({
+                    status: "error",
+                    message: "Refresh token inválido",
+                    statusCode: res.statusCode,
+                    ok: false,
+                    error: {
+                        type: "Unauthorized",
+                        details: "O refresh token enviado não coincide com o gerado pelo servidor!"
+                    }
+                })
+            }
+
+            const newAcessToken = jwt.sign({ id: user._id, email: user.email }, process.env.JWT_ACCESS_TOKEN, { expiresIn: '1m' })
 
             res.status(200).json({
                 status: 'success',
@@ -50,51 +80,24 @@ exports.refreshToken = async (req, res) => {
                     role: user.role || '',
                     avatarUrl: user.avatarUrl || '',
                     createdAt: user.createdAt,
-                    lastLogin: new Date()
+                    access_token: newAcessToken,
                 },
-                access_token: newAcessToken,
             })
         })
 
     } catch (error) {
-        res.status(404).json({ error: 'Erro ao validar refresh token' })
-    }
-}
 
-exports.signout = async (req, res) => {
-
-    try {
-        const tokenSentByCookie = req.cookies.refresh_token
-        const tokenSentByHeader = req.headers.authorization?.replace('Bearer ', '')
-
-        const refresh = tokenSentByCookie || tokenSentByHeader
-        if (!refresh) {
-            return res.status(400).json({ error: 'Refresh token não fornecido' });
-        }
-
-        const userInfoDecoded = jwt.verify(refresh, process.env.JWT_TOKEN)
-
-
-        const userData = await User.findById(userInfoDecoded.id)
-        if (!userData) {
-            return res.status(404).json({ error: 'Usuário não encontrado' })
-        }
-
-        userData.refreshTokens = [...userData.refreshTokens].filter(token => token !== refresh)
-        await userData.save()
-
-        res.clearCookie('refresh_token', {
-            path: '/',
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: 'strict'
-        })
-
-
-        return res.status(200).json({ message: 'Logout realizado com sucesso!' });
-
-    } catch (error) {
-        res.json({ error: error.message })
         console.log(error)
+
+        res.status(404).json({
+            status: "error",
+            message: "Error ao gerar novo access token",
+            statusCode: res.statusCode,
+            ok: false,
+            error: {
+                type: "Unauthorized",
+                details: "Ocorreu um erro ao tentar gerar um novo access token"
+            }
+        })
     }
 }

@@ -112,7 +112,7 @@ exports.login = async (req, res) => {
 
         // atribuindo tokens e salvando no 
         // array tokens base de dados
-        const acessToken = await jwt.sign({ id: user._id, email: user.email }, process.env.JWT_ACCESS_TOKEN, { expiresIn: '15m' })
+        const acessToken = await jwt.sign({ id: user._id, email: user.email }, process.env.JWT_ACCESS_TOKEN, { expiresIn: '1m' })
         const refreshToken = await jwt.sign({ id: user._id, email: user.email }, secretToken, { expiresIn: '7d' })
 
         // Adicionando token ao array de tokens
@@ -152,9 +152,9 @@ exports.login = async (req, res) => {
                 role: user.role || '',
                 avatarUrl: user.avatarUrl || '',
                 createdAt: user.createdAt,
-                lastLogin: new Date()
+                lastLogin: new Date(),
+                access_token: acessToken,
             },
-            access_token: acessToken,
         })
 
     } catch (error) {
@@ -183,7 +183,16 @@ exports.signout = async (req, res) => {
 
         const refresh = tokenSentByCookie || tokenSentByHeader
         if (!refresh) {
-            return res.status(400).json({ error: 'Refresh token não fornecido' });
+            return res.status(400).json({
+                status: "error",
+                message: "Refresh token não fornecido",
+                statusCode: res.statusCode,
+                ok: false,
+                error: {
+                    type: "Unauthorized",
+                    details: "O token de refresh não foi fornecido na requisição"
+                }
+            });
         }
 
         const userInfoDecoded = jwt.verify(refresh, process.env.JWT_TOKEN)
@@ -191,7 +200,16 @@ exports.signout = async (req, res) => {
 
         const userData = await User.findById(userInfoDecoded.id)
         if (!userData) {
-            return res.status(404).json({ error: 'Usuário não encontrado' })
+            return res.status(404).json({
+                status: "error",
+                message: "usuário não encontrado",
+                statusCode: res.statusCode,
+                ok: false,
+                error: {
+                    type: "Unauthorized",
+                    details: "O usuário associado ao token de refresh não foi encontrado"
+                }
+            })
         }
 
         userData.refreshTokens = [...userData.refreshTokens].filter(token => token !== refresh)
@@ -212,8 +230,13 @@ exports.signout = async (req, res) => {
         return res.status(200).json({ message: 'Logout realizado com sucesso!' });
 
     } catch (error) {
-        res.json({ error: error.message })
-        console.log(error)
+        res.status(404).json({
+            status: "error",
+            message: "Error ao tentar realizar o logout",
+            statusCode: res.statusCode,
+            ok: false
+        })
+        // console.log(error)
     }
 }
 
