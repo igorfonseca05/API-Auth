@@ -25,7 +25,7 @@ routes.post('/login', loginValidator, authController.login)
 routes.post('/signout', authController.signout)
 routes.post('/refresh-token', refreshController.refreshToken)
 routes.post('/verifyToken', verifyTokenController.accessToken)
-routes.post('/validate-token', verifyToken, verifyTokenController.verifyUserToken)
+// routes.post('/validate-token', verifyToken, verifyTokenController.verifyUserToken)
 routes.delete('/delete', verifyToken, deleteController.deleteUser)
 routes.get('/perfil', verifyToken, protectedRoutesController.profile)
 

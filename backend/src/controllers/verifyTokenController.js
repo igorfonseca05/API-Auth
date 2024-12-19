@@ -1,34 +1,38 @@
 
 const jwt = require('jsonwebtoken')
 
-exports.verifyUserToken = (req, res) => {
-
-    // console.log(req.body)
-
-    res.status(200).json({
-        status: 'success',
-        message: 'Token valido',
-        statusCode: res.statusCode,
-        ok: true,
-        user: {
-            ...req.body
-        },
-        session: {
-            ipAddress: req.ip,
-            device: req.headers['user-agent'],
-        }
-    })
-}
 
 exports.accessToken = (req, res) => {
 
     try {
         const accessToken = req.headers.authorization?.replace('Bearer ', '')
 
-        if (!accessToken) return res.status(401).json({ error: 'Access Token não enviado' })
+        console.log(accessToken)
+
+        if (!accessToken) {
+            return res.status(401).json({
+                status: "error",
+                message: "access token não fornecido",
+                statusCode: res.statusCode,
+                ok: false,
+                error: {
+                    type: "Unauthorized",
+                    details: "O token de acesso não foi fornecido na requisição"
+                }
+            })
+        }
 
         jwt.verify(accessToken, process.env.JWT_ACCESS_TOKEN, (err, user) => {
-            if (err) return res.status(404).json({ error: 'Access token inválido' })
+            if (err) return res.status(404).json({
+                status: "error",
+                message: "Acess token não é válido",
+                statusCode: res.statusCode,
+                ok: false,
+                error: {
+                    type: "Unauthorized",
+                    details: "O access token enviado não coincide com o token gerado pelo servidor"
+                }
+            })
 
             res.status(200).json({
                 status: 'success',

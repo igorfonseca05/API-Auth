@@ -64,6 +64,8 @@ header {
     align-items: center;
     column-gap: 10px;
     margin-left: 30px !important;
+    cursor: pointer;
+    user-select: none;
 }
 
 .user_infos figure {
@@ -77,12 +79,7 @@ header {
 }
 
 .dropIcon {
-    cursor: pointer;
-    user-select: none;
-    /* transform: rotateZ(0deg); */
-}
-
-.dropIcon {
+    /* display: none; */
     cursor: pointer;
     user-select: none;
     transition: all 0.2s ease-in-out;

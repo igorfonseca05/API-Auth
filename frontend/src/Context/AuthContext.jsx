@@ -6,10 +6,10 @@ export const UserAuthContext = createContext()
 
 export function UserAuthContextProvider({ children }) {
 
+    const [userAuth, setUserAuth] = useState(null)
     const [error, setError] = useState(null)
     const [success, setSuccess] = useState(null)
 
-    const [userAuth, setUserAuth] = useState(null)
 
     // Salvando dados usuário no localStorage
     useEffect(() => {

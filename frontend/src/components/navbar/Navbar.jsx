@@ -30,13 +30,12 @@ const Navbar = () => {
                     {!userAuth?.user && <li><NavLink to={'/login'}>Login</NavLink></li>}
                     {!userAuth?.user && <li><NavLink to={'/signup'} className="contact-btn">Sign-up</NavLink></li>}
                     {userAuth?.user &&
-                        <li className='user_infos' style={{ textTransform: 'capitalize' }}>
+                        <li className='user_infos' style={{ textTransform: 'capitalize' }} onClick={() => setDropIsOpen(!dropIsOpen)}>
                             <figure>
                                 <img src="https://thumbs.dreamstime.com/b/opte-pelo-%C3%ADcone-do-perfil-avatar-placeholder-cinzento-da-foto-99724602.jpg" alt="" />
                             </figure>
                             {userAuth?.user.name}
-                            <span className={`material-symbols-outlined dropIcon ${dropIsOpen && "rotate"}`}
-                                onClick={() => setDropIsOpen(!dropIsOpen)}>
+                            <span className={`material-symbols-outlined dropIcon ${dropIsOpen && "rotate"}`}>
                                 keyboard_arrow_down
                             </span>
                             <Dropdown dropIsOpen={dropIsOpen} setDropIsOpen={setDropIsOpen} />

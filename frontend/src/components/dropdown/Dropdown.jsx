@@ -14,22 +14,18 @@ function Dropdown({ dropIsOpen, setDropIsOpen }) {
     const dropDown = useRef(null)
     const navigate = useNavigate()
 
-
     async function handleSignOut() {
-        const success = await signOut()
-
-        if (success) {
-            return navigate('/login')
-        }
+        const loggedOut = await signOut()
 
         setDropIsOpen(!dropIsOpen)
+
+        if (loggedOut) return navigate('/login')
     }
 
-    function handleEditOption() {
+    function handleEditContainer() {
         setOverlayIsOpen(!overlayIsOpen)
         setDropIsOpen(!dropIsOpen)
     }
-
 
     function dropHeight() {
         if (!dropDown.current) return
@@ -46,9 +42,27 @@ function Dropdown({ dropIsOpen, setDropIsOpen }) {
         }
     }, [dropIsOpen])
 
+
+    useEffect(() => {
+        function closeDropdown(e) {
+
+            const clickedElement = e.target.classList
+            const userNameClicked = clickedElement.contains('user_infos')
+            const IconArrowClicked = clickedElement.contains('dropIcon')
+
+            if (!userNameClicked && !IconArrowClicked) {
+                setDropIsOpen(false)
+            }
+        }
+
+        window.addEventListener('click', closeDropdown)
+
+        return () => window.removeEventListener('click', closeDropdown)
+    }, [])
+
     return (
         <div ref={dropDown} className={`drop_container ${dropIsOpen ? 'open' : 'close'}`}>
-            <div className='dropdown-item' onClick={handleEditOption}>Editar</div>
+            <div className='dropdown-item' onClick={handleEditContainer}>Editar</div>
             <div className='dropdown-item' onClick={() => setDropIsOpen(!dropIsOpen)}>Configurações</div>
             <div className='dropdown-item'><NavLink onClick={() => handleSignOut()}>Sair</NavLink></div>
         </div>

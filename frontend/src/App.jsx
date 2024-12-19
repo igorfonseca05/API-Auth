@@ -32,9 +32,8 @@ function App() {
 
   const { userAuth, error, success, setError, setSuccess } = useAuthContext()
 
-  if (localStorage.length) {
-    const { verifiedUser, loading } = verifyToken()
-  }
+  const { verifiedUser, loading } = verifyToken()
+
 
   useEffect(() => {
     error && toast.error(error, {

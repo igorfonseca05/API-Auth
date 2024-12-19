@@ -24,9 +24,11 @@ function verifyToken() {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        Authorization: `Bearer ${user.access_token}`
+                        Authorization: `Bearer ${user?.access_token}`
                     }
                 })
+
+                console.log(await res.json())
 
                 if (!res.ok) {
                     throw new Error((await res.json()).message)
