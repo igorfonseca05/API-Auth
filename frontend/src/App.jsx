@@ -26,6 +26,7 @@ import ProtectedRoute from './components/protectRoutes/ProtectedRoutes';
 import verifyToken from './hooks/useVerifyToken';
 import { OverlayContextProvider } from './Context/OverlayContext';
 import Overlay from './overlay/Overlay';
+import Page404 from './pages/page404/Page404';
 
 
 function App() {
@@ -33,7 +34,6 @@ function App() {
   const { userAuth, error, success, setError, setSuccess } = useAuthContext()
 
   const { verifiedUser, loading } = verifyToken()
-
 
   useEffect(() => {
     error && toast.error(error, {
@@ -57,24 +57,26 @@ function App() {
 
   return (
     <>
-      <BrowserRouter>
-        <OverlayContextProvider>
-          <Overlay />
-          <ToastContainer></ToastContainer>
-          <Navbar />
-          <Routes>
-            <Route path={'/'} element={<Home />} />
-            <Route path={'/login'} element={!userAuth ? <LoginPage /> : <Home />} />
-            <Route path={'/signup'} element={<SignupPage />} />
+      {loading ? <p style={{ paddingTop: '59px' }}>Verificando Token, aguarde!...</p> :
+        (<BrowserRouter>
+          <OverlayContextProvider>
+            <Overlay />
+            <ToastContainer></ToastContainer>
+            <Navbar />
+            <Routes>
+              <Route path={'/'} element={<Home />} />
+              <Route path={'/login'} element={!userAuth ? <LoginPage /> : <Navigate to={'/'} />} />
+              <Route path={'/signup'} element={!userAuth ? <SignupPage /> : <Navigate to={'/'} />} />
 
-            {/* rotas protegidas */}
-            <Route element={<ProtectedRoute />}>
-              <Route path='/dashboard' element={<Dashboard />} />
-              <Route path='/profile' element={<Profile />} />
-            </Route>
-          </Routes>
-        </OverlayContextProvider>
-      </BrowserRouter>
+              {/* rotas protegidas */}
+              <Route element={<ProtectedRoute />}>
+                <Route path='/dashboard' element={<Dashboard />} />
+                <Route path='/profile' element={<Profile />} />
+                <Route path='*' element={<Page404 />} />
+              </Route>
+            </Routes>
+          </OverlayContextProvider>
+        </BrowserRouter>)}
     </>
   )
 }

@@ -13,6 +13,13 @@ function verifyToken() {
 
 
     useEffect(() => {
+
+        if (!localStorage.getItem('userAuth')) {
+            setVerifiedUser(false)
+            setLoading(false)
+            return
+        }
+
         async function analyseToken() {
             setError('')
             setLoading(true)
@@ -27,8 +34,6 @@ function verifyToken() {
                         Authorization: `Bearer ${user?.access_token}`
                     }
                 })
-
-                console.log(await res.json())
 
                 if (!res.ok) {
                     throw new Error((await res.json()).message)
