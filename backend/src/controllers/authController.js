@@ -74,8 +74,6 @@ exports.login = async (req, res) => {
 
     // req.log.info(req.body.email, 'Dados de Login recebidos via POST')
 
-    // console.log('aqui')
-
     try {
         const { email, password } = req.body
 
@@ -88,7 +86,7 @@ exports.login = async (req, res) => {
                 statusCode: res.statusCode,
                 ok: false,
                 error: {
-                    type: "Unauthorized",
+                    type: "User not found",
                     details: "Usuário não encontrado, verifique os dados inseridos ou cadastre-se"
                 }
             })
@@ -103,7 +101,7 @@ exports.login = async (req, res) => {
                 statusCode: res.statusCode,
                 ok: false,
                 error: {
-                    type: "Unauthorized",
+                    type: "Invalid credentials",
                     details: "Credenciais inválidas"
                 }
             }
@@ -112,8 +110,8 @@ exports.login = async (req, res) => {
 
         // atribuindo tokens e salvando no 
         // array tokens base de dados
-        const acessToken = await jwt.sign({ id: user._id, email: user.email }, process.env.JWT_ACCESS_TOKEN, { expiresIn: '1m' })
-        const refreshToken = await jwt.sign({ id: user._id, email: user.email }, secretToken, { expiresIn: '7d' })
+        const acessToken = jwt.sign({ ...user }, process.env.JWT_ACCESS_TOKEN, { expiresIn: '1m' })
+        const refreshToken = jwt.sign({ ...user }, secretToken, { expiresIn: '7d' })
 
         // Adicionando token ao array de tokens
         refreshTokenContainer.push(refreshToken)

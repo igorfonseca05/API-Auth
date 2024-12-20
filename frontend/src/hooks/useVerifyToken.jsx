@@ -28,9 +28,9 @@ function verifyToken() {
             }
 
             const data = await res.json()
-            console.log(data)
             localStorage.setItem('userAuth', JSON.stringify(data))
             // console.log('novo acccess toke gerado')
+            return data?.user.access_token
 
         } catch (error) {
             console.log(error)
@@ -42,7 +42,7 @@ function verifyToken() {
     // Verificando se o token é válido
     useEffect(() => {
 
-        if (!localStorage.getItem('userAuth')) {
+        if (!JSON.parse(localStorage.getItem('userAuth'))) {
             setVerifiedUser(false)
             setLoading(false)
             return
@@ -55,12 +55,6 @@ function verifyToken() {
             try {
                 const { user } = JSON.parse(localStorage.getItem('userAuth'))
 
-                if (!user) {
-                    setError('Usuário não autenticado')
-                    return
-                }
-
-
                 const res = await fetch('http://localhost:3100/verifyToken', {
                     method: 'POST',
                     headers: {
@@ -71,10 +65,14 @@ function verifyToken() {
 
                 if (!res.ok) {
                     // Criar novo AccessToken
-                    const statusCode = (await res.json()).statusCode
+                    if (res.status === 401) {
 
-                    if (statusCode === 401) {
-                        newAccessToken()
+                        const accessToken = await newAccessToken()
+
+                        if (accessToken) {
+                            analyseToken()
+                        }
+
                         return
                     }
 
@@ -83,7 +81,9 @@ function verifyToken() {
 
                 const userData = await res.json()
                 // setVerifiedUser(userData)
-                // setLoading(false)
+                localStorage.setItem('userAuth', JSON.stringify(userData))
+                // console.log('recriado')
+                return userData
             } catch (error) {
                 console.log(error)
                 localStorage.removeItem('userAuth')

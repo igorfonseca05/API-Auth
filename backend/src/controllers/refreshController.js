@@ -35,7 +35,6 @@ exports.refreshToken = async (req, res) => {
                 details: "O refresh token enviado não coincide com o nenhum usuário!"
             }
         })
-        console.log(user)
 
         if (!refreshToken || !user.refreshTokens.includes(refreshToken)) {
             return res.status(403).json({
@@ -74,12 +73,6 @@ exports.refreshToken = async (req, res) => {
                 statusCode: res.statusCode,
                 ok: true,
                 user: {
-                    id: user._id,
-                    name: user.name,
-                    email: user.email,
-                    role: user.role || '',
-                    avatarUrl: user.avatarUrl || '',
-                    createdAt: user.createdAt,
                     access_token: newAcessToken,
                 },
             })
