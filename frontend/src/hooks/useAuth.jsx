@@ -102,8 +102,6 @@ function useAuth() {
 
             if (!res.ok) throw new Error((userData).message)
 
-
-            // setLoading(false)
             setUserAuth(null)
             localStorage.removeItem('userAuth')
             return true
