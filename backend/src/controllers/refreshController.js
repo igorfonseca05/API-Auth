@@ -21,9 +21,10 @@ exports.refreshToken = async (req, res) => {
 
     try {
         const refreshToken = req.cookies.refresh_token || req.headers.authorization?.replace('Bearer ', '')
-        const decoded = jwt.verify(refreshToken, process.env.JWT_TOKEN)
+        const userInfoDecoded = jwt.verify(refreshToken, process.env.JWT_TOKEN)
 
-        const user = await User.findById(decoded.id)
+        const userId = userInfoDecoded._doc._id
+        const user = await User.findById(userId)
 
         if (!user) return res.status(403).json({
             status: "error",

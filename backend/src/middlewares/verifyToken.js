@@ -22,10 +22,11 @@ async function verifyToken(req, res, next) {
         }
 
         // Decodificar e verificar o Token
-        const decoded = jwt.verify(token, process.env.JWT_TOKEN)
+        const userInfoDecoded = jwt.verify(token, process.env.JWT_TOKEN)
 
         // Verificando se os dados do user estão na base de dados
-        const user = await User.findById(decoded.id)
+        const userId = userInfoDecoded._doc._id
+        const user = await User.findById(userId)
         if (!user) {
             // Enviando resposta ao frontend para
             // remover o token caso usuário não exista

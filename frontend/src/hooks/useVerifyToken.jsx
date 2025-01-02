@@ -85,17 +85,10 @@ function verifyToken() {
                 // console.log('recriado')
                 return userData
             } catch (error) {
-                console.log(error)
+                // console.log(error)
                 localStorage.removeItem('userAuth')
-
-                // if (error.status === 401) {
-                //     console.log('error 401')
-                //     newAccessToken()
-                //     return
-                // }
-
-                setError(error.message)
                 // setError(error.message)
+
             } finally {
                 setLoading(false)
             }

@@ -123,7 +123,7 @@ exports.login = async (req, res) => {
 
         // Salvando os tokens aos dados do usuário na base de dados
         try {
-            user.refreshTokens = [...refreshTokenContainer]
+            user.refreshTokens = refreshTokenContainer
             await user.save()
             // console.log('salvo')
 
@@ -195,8 +195,13 @@ exports.signout = async (req, res) => {
 
         const userInfoDecoded = jwt.verify(refresh, process.env.JWT_TOKEN)
 
+        // console.log(refresh, userInfoDecoded)
 
-        const userData = await User.findById(userInfoDecoded.id)
+        const userId = userInfoDecoded._doc._id
+        const userData = await User.findById(userId)
+
+        console.log(userData)
+
         if (!userData) {
             return res.status(404).json({
                 status: "error",
