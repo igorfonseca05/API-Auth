@@ -33,7 +33,7 @@ exports.accessToken = (req, res) => {
             })
 
 
-            console.log(user)
+            // console.log(user)
 
             res.status(200).json({
                 status: 'success',

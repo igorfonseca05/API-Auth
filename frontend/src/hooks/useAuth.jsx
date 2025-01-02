@@ -30,9 +30,10 @@ function useAuth() {
                 credentials: 'include'
             })
 
+            console.log(await res.json())
+
             if (!res.ok) {
-                const errorMsgFromServer = (await res.json()).message
-                throw new Error(errorMsgFromServer)
+                throw new Error((await res.json()).message)
             }
 
             const userData = await res.json()

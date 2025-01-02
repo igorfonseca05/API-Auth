@@ -24,9 +24,9 @@ exports.refreshToken = async (req, res) => {
         const userInfoDecoded = jwt.verify(refreshToken, process.env.JWT_TOKEN)
 
         const userId = userInfoDecoded._doc._id
-        const user = await User.findById(userId)
+        const userData = await User.findById(userId)
 
-        if (!user) return res.status(403).json({
+        if (!userData) return res.status(403).json({
             status: "error",
             message: "Usuário do refresh token não encontrado",
             statusCode: res.statusCode,
@@ -37,7 +37,7 @@ exports.refreshToken = async (req, res) => {
             }
         })
 
-        if (!refreshToken || !user.refreshTokens.includes(refreshToken)) {
+        if (!refreshToken || !userData.refreshTokens.includes(refreshToken)) {
             return res.status(403).json({
                 status: "error",
                 message: "Refresh token inválido",
@@ -66,7 +66,7 @@ exports.refreshToken = async (req, res) => {
                 })
             }
 
-            const newAcessToken = jwt.sign({ id: user._id, email: user.email }, process.env.JWT_ACCESS_TOKEN, { expiresIn: '1m' })
+            const newAcessToken = jwt.sign({ ...userData }, process.env.JWT_ACCESS_TOKEN, { expiresIn: '1m' })
 
             res.status(200).json({
                 status: 'success',
@@ -74,6 +74,7 @@ exports.refreshToken = async (req, res) => {
                 statusCode: res.statusCode,
                 ok: true,
                 user: {
+                    ...userData,
                     access_token: newAcessToken,
                 },
             })

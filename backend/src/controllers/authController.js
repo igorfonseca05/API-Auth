@@ -5,8 +5,6 @@ const argon2 = require('argon2')
 const bcrypt = require('bcrypt')
 
 
-const secretToken = process.env.JWT_TOKEN
-
 let refreshTokenContainer = []
 const MAX_REFRESH_TOKENS = 4
 
@@ -38,7 +36,7 @@ exports.signUp = async (req, res) => {
         const user = new User({ name, email, password })
         await user.save()
 
-        const token = await jwt.sign({ id: user._id, email: user.email }, secretToken, { expiresIn: '1h' })
+        const token = await jwt.sign({ id: user._id, email: user.email }, process.env.JWT_TOKEN, { expiresIn: '1h' })
 
         res.cookie('auth_token', token, {
             httpOnly: true,
@@ -63,7 +61,16 @@ exports.signUp = async (req, res) => {
             })
 
     } catch (error) {
-        res.status(404).json({ error: error.message })
+        res.status(404).json({
+            status: "error",
+            message: "Erro ao cadastrar usuário",
+            statusCode: res.statusCode,
+            ok: false,
+            error: {
+                type: "Unauthorized",
+                details: error.message
+            }
+        })
     }
 }
 
@@ -111,7 +118,7 @@ exports.login = async (req, res) => {
         // atribuindo tokens e salvando no 
         // array tokens base de dados
         const acessToken = jwt.sign({ ...user }, process.env.JWT_ACCESS_TOKEN, { expiresIn: '1m' })
-        const refreshToken = jwt.sign({ ...user }, secretToken, { expiresIn: '7d' })
+        const refreshToken = jwt.sign({ ...user }, process.env.JWT_TOKEN, { expiresIn: '7d' })
 
         // Adicionando token ao array de tokens
         refreshTokenContainer.push(refreshToken)
@@ -123,7 +130,7 @@ exports.login = async (req, res) => {
 
         // Salvando os tokens aos dados do usuário na base de dados
         try {
-            user.refreshTokens = refreshTokenContainer
+            user.refreshTokens = [...refreshTokenContainer]
             await user.save()
             // console.log('salvo')
 
@@ -200,7 +207,7 @@ exports.signout = async (req, res) => {
         const userId = userInfoDecoded._doc._id
         const userData = await User.findById(userId)
 
-        console.log(userData)
+        // console.log(userData)
 
         if (!userData) {
             return res.status(404).json({

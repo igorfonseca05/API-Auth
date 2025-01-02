@@ -89,7 +89,7 @@ const SignUpPage = () => {
                     <div className="input-group">
                         <span className='material-symbols-outlined icon_input'>lock</span>
                         <input
-                            type="lock"
+                            type="password"
                             id="password"
                             value={user.password}
                             onChange={(e) => handleChange(e)}

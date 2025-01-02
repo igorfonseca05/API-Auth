@@ -28,8 +28,10 @@ function verifyToken() {
             }
 
             const data = await res.json()
+
+            // salvando dados do usuário com novo token
             localStorage.setItem('userAuth', JSON.stringify(data))
-            // console.log('novo acccess toke gerado')
+
             return data?.user.access_token
 
         } catch (error) {
@@ -64,11 +66,14 @@ function verifyToken() {
                 })
 
                 if (!res.ok) {
+
                     // Criar novo AccessToken
                     if (res.status === 401) {
 
                         const accessToken = await newAccessToken()
 
+                        // Se o novo accessToken for gerado, refaça a analise
+                        // da validade do Access Token
                         if (accessToken) {
                             analyseToken()
                         }
