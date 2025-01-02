@@ -16,13 +16,10 @@ const Home = () => {
                     <p>Gerencie suas credenciais de forma simples, segura e intuitiva.</p>
                     <a href="signup" className="btn-primary">Comece Agora</a>
                 </div>
-                <div className="hero-image">
+                {/* <div className="hero-image">
                     <img src="https://via.placeholder.com/400x300" alt="Hero" />
-                </div>
+                </div> */}
             </section>
-            <div className="home-container page">
-
-            </div>
         </>
     );
 };
