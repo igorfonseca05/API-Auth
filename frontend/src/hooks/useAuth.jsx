@@ -30,7 +30,7 @@ function useAuth() {
                 credentials: 'include'
             })
 
-            console.log(await res.json())
+            // console.log(await res.json())
 
             if (!res.ok) {
                 throw new Error((await res.json()).message)

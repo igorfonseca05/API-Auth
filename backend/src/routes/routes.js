@@ -8,6 +8,7 @@ const deleteController = require('../controllers/deleteController')
 const protectedRoutesController = require('../controllers/protectedRoutesController')
 const verifyTokenController = require('../controllers/verifyTokenController')
 const refreshController = require('../controllers/refreshController')
+const signOutController = require('../controllers/signOutController')
 
 // Middlewares
 const validation = require('../middlewares/authValidator')
@@ -22,7 +23,7 @@ routes.get('/', homeController.home)
 // Rotas para sistema de cadastro e login
 routes.post('/signup', validation, authController.signUp)
 routes.post('/login', loginValidator, authController.login)
-routes.post('/signout', authController.signout)
+routes.post('/signout', signOutController.signout)
 routes.post('/refresh-token', refreshController.refreshToken)
 routes.post('/verifyToken', verifyTokenController.accessToken)
 // routes.post('/validate-token', verifyToken, verifyTokenController.verifyUserToken)

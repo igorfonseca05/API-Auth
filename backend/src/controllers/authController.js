@@ -36,7 +36,7 @@ exports.signUp = async (req, res) => {
         const user = new User({ name, email, password })
         await user.save()
 
-        const token = await jwt.sign({ id: user._id, email: user.email }, process.env.JWT_TOKEN, { expiresIn: '1h' })
+        const token = await jwt.sign({ ...user }, process.env.JWT_TOKEN, { expiresIn: '1h' })
 
         res.cookie('auth_token', token, {
             httpOnly: true,
@@ -177,76 +177,3 @@ exports.login = async (req, res) => {
         )
     }
 }
-
-
-// END-POINT DE SIGNOUT
-exports.signout = async (req, res) => {
-
-    try {
-        const tokenSentByCookie = req.cookies.refresh_token
-        const tokenSentByHeader = req.headers.authorization?.replace('Bearer ', '')
-
-        const refresh = tokenSentByCookie || tokenSentByHeader
-        if (!refresh) {
-            return res.status(400).json({
-                status: "error",
-                message: "Refresh token não fornecido",
-                statusCode: res.statusCode,
-                ok: false,
-                error: {
-                    type: "Unauthorized",
-                    details: "O token de refresh não foi fornecido na requisição"
-                }
-            });
-        }
-
-        const userInfoDecoded = jwt.verify(refresh, process.env.JWT_TOKEN)
-
-        // console.log(refresh, userInfoDecoded)
-
-        const userId = userInfoDecoded._doc._id
-        const userData = await User.findById(userId)
-
-        // console.log(userData)
-
-        if (!userData) {
-            return res.status(404).json({
-                status: "error",
-                message: "usuário não encontrado",
-                statusCode: res.statusCode,
-                ok: false,
-                error: {
-                    type: "Unauthorized",
-                    details: "O usuário associado ao token de refresh não foi encontrado"
-                }
-            })
-        }
-
-        userData.refreshTokens = [...userData.refreshTokens].filter(token => token !== refresh)
-
-
-        await userData.save()
-
-        // console.log(userData.refreshTokens, refreshTokenContainer)
-
-        res.clearCookie('refresh_token', {
-            path: '/',
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: 'strict'
-        })
-
-
-        return res.status(200).json({ message: 'Logout realizado com sucesso!' });
-
-    } catch (error) {
-        res.status(404).json({
-            status: "error",
-            message: "Error ao tentar realizar o logout",
-            statusCode: res.statusCode,
-            ok: false
-        })
-        // console.log(error)
-    }
-}
-

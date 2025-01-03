@@ -20,11 +20,19 @@ let userData
 exports.refreshToken = async (req, res) => {
 
     try {
-        const refreshToken = req.cookies.refresh_token || req.headers.authorization?.replace('Bearer ', '')
+
+        const tokenSignUp = req.cookies.auth_token
+        const tokenLogin = req.cookies.refresh_token
+        const headerToken = req.headers.authorization?.replace('Bearer ', '')
+
+        const refreshToken = tokenSignUp || tokenLogin || headerToken
+
         const userInfoDecoded = jwt.verify(refreshToken, process.env.JWT_TOKEN)
 
         const userId = userInfoDecoded._doc._id
         const userData = await User.findById(userId)
+
+        console.log(userData)
 
         if (!userData) return res.status(403).json({
             status: "error",
