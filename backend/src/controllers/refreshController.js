@@ -24,15 +24,12 @@ exports.refreshToken = async (req, res) => {
         const tokenSignUp = req.cookies.auth_token
         const tokenLogin = req.cookies.refresh_token
         const headerToken = req.headers.authorization?.replace('Bearer ', '')
-
         const refreshToken = tokenSignUp || tokenLogin || headerToken
 
-        const userInfoDecoded = jwt.verify(refreshToken, process.env.JWT_TOKEN)
-
-        const userId = userInfoDecoded._doc._id
+        // Decodificando token e buscando usuário
+        const userTokenDecoded = jwt.verify(refreshToken, process.env.JWT_TOKEN)
+        const userId = userTokenDecoded._doc._id
         const userData = await User.findById(userId)
-
-        console.log(userData)
 
         if (!userData) return res.status(403).json({
             status: "error",
@@ -45,7 +42,9 @@ exports.refreshToken = async (req, res) => {
             }
         })
 
-        if (!refreshToken || !userData.refreshTokens.includes(refreshToken)) {
+        // Verificando se o token foi enviado ou se o token
+        // pertence ao usuário
+        if (!refreshToken || !userData.refreshTokens.includes(refreshToken) || !userTokenDecoded) {
             return res.status(403).json({
                 status: "error",
                 message: "Refresh token inválido",
@@ -58,34 +57,17 @@ exports.refreshToken = async (req, res) => {
             })
         }
 
-        // console.log(refreshToken)
+        const newAcessToken = jwt.sign({ ...userData }, process.env.JWT_ACCESS_TOKEN, { expiresIn: '1m' })
 
-        jwt.verify(refreshToken, process.env.JWT_TOKEN, (err, user) => {
-            if (err) {
-                return res.status(403).json({
-                    status: "error",
-                    message: "Refresh token inválido",
-                    statusCode: res.statusCode,
-                    ok: false,
-                    error: {
-                        type: "Unauthorized",
-                        details: "O refresh token enviado não coincide com o gerado pelo servidor!"
-                    }
-                })
-            }
-
-            const newAcessToken = jwt.sign({ ...userData }, process.env.JWT_ACCESS_TOKEN, { expiresIn: '1m' })
-
-            res.status(200).json({
-                status: 'success',
-                message: 'Access token gerado com sucesso',
-                statusCode: res.statusCode,
-                ok: true,
-                user: {
-                    ...userData,
-                    access_token: newAcessToken,
-                },
-            })
+        res.status(200).json({
+            status: 'success',
+            message: 'Access token gerado com sucesso',
+            statusCode: res.statusCode,
+            ok: true,
+            user: {
+                ...userData,
+                access_token: newAcessToken,
+            },
         })
 
     } catch (error) {

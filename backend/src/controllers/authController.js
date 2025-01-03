@@ -36,7 +36,8 @@ exports.signUp = async (req, res) => {
         const user = new User({ name, email, password })
         await user.save()
 
-        const token = await jwt.sign({ ...user }, process.env.JWT_TOKEN, { expiresIn: '1h' })
+        const accessToken = await jwt.sign({ ...user }, process.env.JWT_ACCESS_TOKEN, { expiresIn: '15min' })
+        const refreshToken = await jwt.sign({ ...user }, process.env.JWT_TOKEN, { expiresIn: '7d' })
 
         res.cookie('auth_token', token, {
             httpOnly: true,

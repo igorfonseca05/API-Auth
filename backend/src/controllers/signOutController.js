@@ -10,26 +10,30 @@ const bcrypt = require('bcrypt')
 exports.signout = async (req, res) => {
 
     try {
+        // Verifica se Token foi enviado
         const userAuth = req.cookies.auth_token
         const tokenSentByCookie = req.cookies.refresh_token
         const tokenSentByHeader = req.headers.authorization?.replace('Bearer ', '')
-        const refresh = userAuth || tokenSentByCookie || tokenSentByHeader
-        if (!refresh) {
+        const refreshToken = userAuth || tokenSentByCookie || tokenSentByHeader
+
+        if (!refreshToken) {
             return res.status(400).json({
                 status: "error",
-                message: "Refresh token não fornecido",
+                message: "RefreshToken token não fornecido",
                 statusCode: res.statusCode,
                 ok: false,
                 error: {
                     type: "Unauthorized",
-                    details: "O token de refresh não foi fornecido na requisição"
+                    details: "O token de refreshToken não foi fornecido na requisição"
                 }
             });
         }
 
-        const userInfoDecoded = jwt.verify(refresh, process.env.JWT_TOKEN)
-        const userId = userInfoDecoded._doc._id
-        const userData = await User.findById(userId)
+        // Decodifica dados do Token e busca na base de dados
+        const userTokenDecoded = jwt.verify(refreshToken, process.env.JWT_TOKEN)
+        const userTokenId = userTokenDecoded._doc._id
+        const userData = await User.findById(userTokenId)
+
         if (!userData) {
             return res.status(404).json({
                 status: "error",
@@ -38,16 +42,16 @@ exports.signout = async (req, res) => {
                 ok: false,
                 error: {
                     type: "Unauthorized",
-                    details: "O usuário associado ao token de refresh não foi encontrado"
+                    details: "O usuário associado ao token de refreshToken não foi encontrado"
                 }
             })
         }
 
-        userData.refreshTokens = [...userData.refreshTokens].filter(token => token !== refresh)
+        // Removendo token fornecido no login quando fizer signOut
+        userData.refreshTokens = [...userData.refreshTokens].filter(token => token !== refreshToken)
         await userData.save()
 
-        /**Caso o usuário não tenha */
-        if (req.cookie.auth_token) {
+        if (req.cookies.auth_token) {
             res.clearCookie('auth_token', {
                 path: '/',
                 httpOnly: true,
@@ -56,7 +60,6 @@ exports.signout = async (req, res) => {
             })
 
             return res.status(200).json({ message: 'Logout realizado com sucesso!' });
-
         }
 
         res.clearCookie('refresh_token', {
