@@ -19,32 +19,46 @@ let userData
 
 exports.refreshToken = async (req, res) => {
 
-    try {
+    const accessTokenSecret = process.env.JWT_ACCESS_TOKEN
+    const refreshTokenSecret = process.env.JWT_TOKEN
 
-        const tokenSignUp = req.cookies.auth_token
-        const tokenLogin = req.cookies.refresh_token
-        const headerToken = req.headers.authorization?.replace('Bearer ', '')
-        const refreshToken = tokenSignUp || tokenLogin || headerToken
+    try {
+        const refreshTokenSentByCookie = req.cookies.refresh_token
+        const refreshTokenSentByHeader = req.headers.authorization?.replace('Bearer ', '')
+        const refreshToken = refreshTokenSentByCookie || refreshTokenSentByHeader
+
+        if (!refreshToken) {
+            return res.status(403).json({
+                status: "error",
+                message: "Refresh token não enviado",
+                statusCode: res.statusCode,
+                ok: false,
+                error: {
+                    type: "Unauthorized",
+                    details: "Refresh Token não enviado no corpo da requisição"
+                }
+            })
+        }
 
         // Decodificando token e buscando usuário
-        const userTokenDecoded = jwt.verify(refreshToken, process.env.JWT_TOKEN)
+        const userTokenDecoded = jwt.verify(refreshToken, refreshTokenSecret)
         const userId = userTokenDecoded.id
         const userData = await User.findById(userId)
 
         if (!userData) return res.status(403).json({
             status: "error",
-            message: "Usuário do refresh token não encontrado",
+            message: "Usuário não encontrado",
             statusCode: res.statusCode,
             ok: false,
             error: {
                 type: "Unauthorized",
-                details: "O refresh token enviado não coincide com o nenhum usuário!"
+                details: "O refresh token enviado não pertence a nenhum usuário cadastrado!"
             }
         })
 
-        // Verificando se o token foi enviado ou se o token
-        // pertence ao usuário
-        if (!refreshToken || !userData.refreshTokens.includes(refreshToken) || !userTokenDecoded) {
+        // Verificando se o token foi enviado ou se pertence ao usuário
+        const userHasRefreshToken = userData.refreshTokens.includes(refreshToken)
+        if (!userHasRefreshToken || !userTokenDecoded) {
             return res.status(403).json({
                 status: "error",
                 message: "Refresh token inválido",
@@ -57,7 +71,8 @@ exports.refreshToken = async (req, res) => {
             })
         }
 
-        const newAcessToken = jwt.sign({ ...userData }, process.env.JWT_ACCESS_TOKEN, { expiresIn: '1m' })
+        const payloadUser = { id: userData._id, name: userData.name }
+        const newAcessToken = jwt.sign(payloadUser, accessTokenSecret, { expiresIn: '1m' })
 
         res.status(200).json({
             status: 'success',
@@ -71,9 +86,6 @@ exports.refreshToken = async (req, res) => {
         })
 
     } catch (error) {
-
-        console.log(error)
-
         res.status(404).json({
             status: "error",
             message: "Error ao gerar novo access token",
@@ -81,7 +93,7 @@ exports.refreshToken = async (req, res) => {
             ok: false,
             error: {
                 type: "Unauthorized",
-                details: "Ocorreu um erro ao tentar gerar um novo access token"
+                details: error.message
             }
         })
     }

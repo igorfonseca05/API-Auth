@@ -72,12 +72,10 @@ function verifyToken() {
 
                         const accessToken = await newAccessToken()
 
-                        // Se o novo accessToken for gerado, refaça a analise
-                        // da validade do Access Token
+                        // Se o novo accessToken for gerado, refaça a analise da validade do Access Token
                         if (accessToken) {
                             analyseToken()
                         }
-
                         return
                     }
 
@@ -85,15 +83,11 @@ function verifyToken() {
                 }
 
                 const userData = await res.json()
-                // setVerifiedUser(userData)
                 localStorage.setItem('userAuth', JSON.stringify(userData))
-                // console.log('recriado')
                 return userData
             } catch (error) {
-                // console.log(error)
-                localStorage.removeItem('userAuth')
-                // setError(error.message)
-
+                console.log(error)
+                // localStorage.removeItem('userAuth')
             } finally {
                 setLoading(false)
             }

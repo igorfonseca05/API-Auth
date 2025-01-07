@@ -15,8 +15,6 @@ function useAuth() {
 
         let { name, email, password } = userInfos
 
-        // name = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase()
-
         setLoading(true)
         setError('')
 
@@ -99,14 +97,14 @@ function useAuth() {
                 credentials: 'include'
             })
 
-            const userData = await res.json()
 
-            console.log(userData)
+            if (!res.ok) throw new Error((await res.json()).message)
 
-            if (!res.ok) throw new Error((userData).message)
-
+            // const userData = await res.json()
             setUserAuth(null)
             localStorage.removeItem('userAuth')
+            console.log('oi')
+
             return true
 
         } catch (error) {

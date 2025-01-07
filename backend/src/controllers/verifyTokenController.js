@@ -7,32 +7,32 @@ exports.accessToken = (req, res) => {
     try {
         const accessToken = req.headers.authorization?.replace('Bearer ', '')
 
+        // Verifica se token foi enviado
         if (!accessToken) {
-            return res.status(401).json({
+            return res.status(403).json({
                 status: "error",
                 message: "access token não fornecido",
                 statusCode: res.statusCode,
                 ok: false,
                 error: {
                     type: "Unauthorized",
-                    details: "O token de acesso não foi fornecido na requisição"
+                    details: "AccessToken não foi fornecido na requisição"
                 }
             })
         }
 
+        // Verifica o accessToken enviado
         jwt.verify(accessToken, process.env.JWT_ACCESS_TOKEN, (err, user) => {
             if (err) return res.status(401).json({
                 status: "error",
-                message: "Acess token inválido ou expirado",
+                message: "Access token inválido ou expirado",
                 statusCode: res.statusCode,
                 ok: false,
                 error: {
-                    type: "Unauthorized",
-                    details: "O access token enviado não coincide com o token gerado pelo servidor ou está expirado!"
+                    type: "Invalid accessToken",
+                    details: err.message
                 }
             })
-
-
             // console.log(user)
 
             res.status(200).json({
@@ -40,16 +40,24 @@ exports.accessToken = (req, res) => {
                 message: 'Token válido',
                 statusCode: res.statusCode,
                 ok: true,
+                user: {
+                    ...user,
+                    accessToken
+                }
             })
         })
 
     } catch (error) {
-
         res.status(404).json({
             status: 'Error',
             message: error.message,
             statusCode: res.statusCode,
             ok: false,
+            error: {
+                type: "Unknow error",
+                details: error.message
+
+            },
             user: null
         })
     }

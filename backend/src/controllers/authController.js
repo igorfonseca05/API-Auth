@@ -154,8 +154,6 @@ exports.login = async (req, res) => {
         try {
             user.refreshTokens = [...refreshTokenContainer]
             await user.save()
-            // console.log('salvo')
-
         } catch (error) {
             console.log(error)
         }
