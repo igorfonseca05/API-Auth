@@ -42,8 +42,9 @@ exports.accessToken = (req, res) => {
                 ok: true,
                 user: {
                     ...user,
-                    accessToken
-                }
+                    access_token: accessToken,
+                    generatedIn: new Date()
+                },
             })
         })
 

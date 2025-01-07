@@ -72,17 +72,22 @@ exports.refreshToken = async (req, res) => {
         }
 
         const payloadUser = { id: userData._id, name: userData.name }
-        const newAcessToken = jwt.sign(payloadUser, accessTokenSecret, { expiresIn: '1m' })
+        const newAcessToken = jwt.sign(payloadUser, accessTokenSecret, { expiresIn: '15m' })
+
+        // Removendo campos antes de enviar para o usuário
+        const user = { ...userData._doc }
+        delete user.refreshTokens
+        delete user.password
 
         res.status(200).json({
             status: 'success',
             message: 'Access token gerado com sucesso',
             statusCode: res.statusCode,
             ok: true,
-            user: {
-                ...userData,
-                access_token: newAcessToken,
-            },
+            access_token: newAcessToken,
+            // user: {
+            //     ...user,
+            // },
         })
 
     } catch (error) {

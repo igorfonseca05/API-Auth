@@ -14,7 +14,6 @@ function verifyToken() {
 
     const newAccessToken = async function getNewAccessToken() {
         try {
-
             const res = await fetch('http://localhost:3100/refresh-token', {
                 method: 'POST',
                 headers: {
@@ -28,11 +27,7 @@ function verifyToken() {
             }
 
             const data = await res.json()
-
-            // salvando dados do usuário com novo token
-            localStorage.setItem('userAuth', JSON.stringify(data))
-
-            return data?.user.access_token
+            return data?.access_token
 
         } catch (error) {
             console.log(error)
@@ -55,6 +50,7 @@ function verifyToken() {
             setLoading(true)
 
             try {
+                // Obterá o accessToken do login ou o retornado pela rota do refreshToken
                 const { user } = JSON.parse(localStorage.getItem('userAuth'))
 
                 const res = await fetch('http://localhost:3100/verifyToken', {
@@ -66,14 +62,18 @@ function verifyToken() {
                 })
 
                 if (!res.ok) {
-
-                    // Criar novo AccessToken
+                    // Gerar novo AccessToken
                     if (res.status === 401) {
 
-                        const accessToken = await newAccessToken()
+                        const getNewAccessToken = await newAccessToken()
 
                         // Se o novo accessToken for gerado, refaça a analise da validade do Access Token
-                        if (accessToken) {
+                        if (getNewAccessToken) {
+                            const data = JSON.parse(localStorage.getItem('userAuth'))
+                            delete data.user.access_token
+                            const newUser = { ...data, user: { ...data.user, access_token: getNewAccessToken } }
+                            localStorage.setItem('userAuth', JSON.stringify(newUser))
+
                             analyseToken()
                         }
                         return
@@ -85,8 +85,9 @@ function verifyToken() {
                 const userData = await res.json()
                 localStorage.setItem('userAuth', JSON.stringify(userData))
                 return userData
+
             } catch (error) {
-                console.log(error)
+                // console.log(error)
                 // localStorage.removeItem('userAuth')
             } finally {
                 setLoading(false)
