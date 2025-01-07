@@ -35,8 +35,8 @@ exports.signUp = async (req, res) => {
 
         const user = new User({ name, email, password })
 
-        const accessToken = await jwt.sign({ ...user }, process.env.JWT_ACCESS_TOKEN, { expiresIn: '15min' })
-        const refreshToken = await jwt.sign({ ...user }, process.env.JWT_TOKEN, { expiresIn: '7d' })
+        const accessToken = await jwt.sign({ id: user._id, name: user.name }, process.env.JWT_ACCESS_TOKEN, { expiresIn: '15min' })
+        const refreshToken = await jwt.sign({ id: user._id, name: user.name }, process.env.JWT_TOKEN, { expiresIn: '7d' })
 
         // Adicionando refresh ao refreshContainer
         refreshTokenContainer.push(refreshToken)
@@ -138,10 +138,9 @@ exports.login = async (req, res) => {
             )
         }
 
-        // atribuindo tokens e salvando no 
-        // array tokens base de dados
-        const acessToken = jwt.sign({ ...user }, process.env.JWT_ACCESS_TOKEN, { expiresIn: '1m' })
-        const refreshToken = jwt.sign({ ...user }, process.env.JWT_TOKEN, { expiresIn: '7d' })
+        // atribuindo tokens e salvando no array tokens base de dados
+        const acessToken = jwt.sign({ id: user._id, name: user.name }, process.env.JWT_ACCESS_TOKEN, { expiresIn: '1m' })
+        const refreshToken = jwt.sign({ id: user._id, name: user.name }, process.env.JWT_TOKEN, { expiresIn: '7d' })
 
         // Adicionando token ao array de tokens
         refreshTokenContainer.push(refreshToken)

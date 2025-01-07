@@ -30,8 +30,8 @@ exports.signout = async (req, res) => {
 
         // Decodifica dados do Token e busca na base de dados
         const userTokenDecoded = jwt.verify(refreshToken, process.env.JWT_TOKEN)
-        console.log(userTokenDecoded)
-        const userTokenId = userTokenDecoded._doc._id
+        // console.log(userTokenDecoded)
+        const userTokenId = userTokenDecoded.id
         const userData = await User.findById(userTokenId)
 
         if (!userData) {

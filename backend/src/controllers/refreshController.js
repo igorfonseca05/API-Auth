@@ -28,7 +28,7 @@ exports.refreshToken = async (req, res) => {
 
         // Decodificando token e buscando usuário
         const userTokenDecoded = jwt.verify(refreshToken, process.env.JWT_TOKEN)
-        const userId = userTokenDecoded._doc._id
+        const userId = userTokenDecoded.id
         const userData = await User.findById(userId)
 
         if (!userData) return res.status(403).json({
