@@ -34,12 +34,34 @@ exports.signUp = async (req, res) => {
         )
 
         const user = new User({ name, email, password })
-        await user.save()
 
         const accessToken = await jwt.sign({ ...user }, process.env.JWT_ACCESS_TOKEN, { expiresIn: '15min' })
         const refreshToken = await jwt.sign({ ...user }, process.env.JWT_TOKEN, { expiresIn: '7d' })
 
-        res.cookie('auth_token', token, {
+        // Adicionando refresh ao refreshContainer
+        refreshTokenContainer.push(refreshToken)
+
+        // Adicionando token ao usuário na base de dados
+        user.refreshTokens = [...refreshTokenContainer]
+
+        try {
+
+            await user.save()
+
+        } catch (error) {
+            return res.status(404).json({
+                status: "error",
+                message: "Erro ao salvar usuário na base de dados",
+                statusCode: res.statusCode,
+                ok: false,
+                error: {
+                    type: "Unauthorized",
+                    details: error.message
+                }
+            })
+        }
+
+        res.cookie('refresh_token', refreshToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production', // Apenas true em produção
             sameSite: 'strict',
@@ -57,7 +79,8 @@ exports.signUp = async (req, res) => {
                     role: user.role || '',
                     avatarUrl: user.avatarUrl || '',
                     createdAt: user.createdAt,
-                    lastLoginAt: Date.now()
+                    lastLoginAt: Date.now(),
+                    accessToken
                 }
             })
 
@@ -74,7 +97,6 @@ exports.signUp = async (req, res) => {
         })
     }
 }
-
 
 
 // END-POINT DE LOGIN

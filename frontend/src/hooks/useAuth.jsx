@@ -13,7 +13,9 @@ function useAuth() {
     // logica de criar o usuário
     async function signUp(userInfos) {
 
-        const { name, email, password } = userInfos
+        let { name, email, password } = userInfos
+
+        // name = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase()
 
         setLoading(true)
         setError('')

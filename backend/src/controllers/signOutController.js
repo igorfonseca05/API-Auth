@@ -11,10 +11,9 @@ exports.signout = async (req, res) => {
 
     try {
         // Verifica se Token foi enviado
-        const userAuth = req.cookies.auth_token
         const tokenSentByCookie = req.cookies.refresh_token
         const tokenSentByHeader = req.headers.authorization?.replace('Bearer ', '')
-        const refreshToken = userAuth || tokenSentByCookie || tokenSentByHeader
+        const refreshToken = tokenSentByCookie || tokenSentByHeader
 
         if (!refreshToken) {
             return res.status(400).json({
@@ -31,6 +30,7 @@ exports.signout = async (req, res) => {
 
         // Decodifica dados do Token e busca na base de dados
         const userTokenDecoded = jwt.verify(refreshToken, process.env.JWT_TOKEN)
+        console.log(userTokenDecoded)
         const userTokenId = userTokenDecoded._doc._id
         const userData = await User.findById(userTokenId)
 
@@ -51,17 +51,6 @@ exports.signout = async (req, res) => {
         userData.refreshTokens = [...userData.refreshTokens].filter(token => token !== refreshToken)
         await userData.save()
 
-        if (req.cookies.auth_token) {
-            res.clearCookie('auth_token', {
-                path: '/',
-                httpOnly: true,
-                secure: process.env.NODE_ENV === 'production',
-                sameSite: 'strict'
-            })
-
-            return res.status(200).json({ message: 'Logout realizado com sucesso!' });
-        }
-
         res.clearCookie('refresh_token', {
             path: '/',
             httpOnly: true,
@@ -76,7 +65,11 @@ exports.signout = async (req, res) => {
             status: "error",
             message: "Error ao tentar realizar o logout",
             statusCode: res.statusCode,
-            ok: false
+            ok: false,
+            error: {
+                type: "unknowleged",
+                details: error.message
+            }
         })
     }
 }
