@@ -72,7 +72,7 @@ exports.refreshToken = async (req, res) => {
         }
 
         const payloadUser = { id: userData._id, name: userData.name }
-        const newAcessToken = jwt.sign(payloadUser, accessTokenSecret, { expiresIn: '15m' })
+        const newAcessToken = jwt.sign(payloadUser, accessTokenSecret, { expiresIn: '1m' })
 
         // Removendo campos antes de enviar para o usuário
         const user = { ...userData._doc }

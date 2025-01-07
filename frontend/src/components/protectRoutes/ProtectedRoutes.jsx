@@ -6,10 +6,12 @@ import { fetchWithAuth } from '../../hooks/useAccessToken'
 
 function ProtectedRoute() {
 
-    const isValid = localStorage.getItem('userAuth')
+    const { user } = JSON.parse(localStorage.getItem('userAuth'))
+
+    // console.log(user.access_token)
 
     return (
-        isValid ? <Outlet /> : <Navigate></Navigate>
+        user.access_token ? <Outlet /> : <Navigate to={"/login"} />
     )
 
 }

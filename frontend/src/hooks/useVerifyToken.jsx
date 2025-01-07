@@ -35,6 +35,22 @@ function verifyToken() {
         }
     }
 
+    function saveUserData(userData) {
+        localStorage.setItem('userAuth', JSON.stringify(userData))
+    }
+
+    function SwitchingAccessTokenByNewAccessToken(token) {
+        const data = JSON.parse(localStorage.getItem('userAuth'))
+        delete data.user.access_token
+        const newUser = { ...data, user: { ...data.user, access_token: token } }
+        saveUserData(newUser)
+    }
+
+
+    function removeUserIfError() {
+        localStorage.removeItem('userAuth')
+    }
+
 
     // Verificando se o token é válido
     useEffect(() => {
@@ -62,33 +78,32 @@ function verifyToken() {
                 })
 
                 if (!res.ok) {
-                    // Gerar novo AccessToken
                     if (res.status === 401) {
 
+                        // Gerar novo AccessToken se expirado
                         const getNewAccessToken = await newAccessToken()
 
                         // Se o novo accessToken for gerado, refaça a analise da validade do Access Token
                         if (getNewAccessToken) {
-                            const data = JSON.parse(localStorage.getItem('userAuth'))
-                            delete data.user.access_token
-                            const newUser = { ...data, user: { ...data.user, access_token: getNewAccessToken } }
-                            localStorage.setItem('userAuth', JSON.stringify(newUser))
-
+                            // Alterando valor do access token para novo valor
+                            SwitchingAccessTokenByNewAccessToken(getNewAccessToken)
                             analyseToken()
                         }
+
                         return
                     }
 
                     throw new Error((await res.json()).message)
                 }
 
+                // Com o novo access Token, obteremos a resposta de que token é válido
                 const userData = await res.json()
-                localStorage.setItem('userAuth', JSON.stringify(userData))
-                return userData
+                saveUserData(userData)
 
             } catch (error) {
-                // console.log(error)
-                // localStorage.removeItem('userAuth')
+                removeUserIfError()
+                setError(error.message)
+
             } finally {
                 setLoading(false)
             }

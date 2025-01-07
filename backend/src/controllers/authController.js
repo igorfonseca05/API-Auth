@@ -35,7 +35,7 @@ exports.signUp = async (req, res) => {
 
         const user = new User({ name, email, password })
 
-        const accessToken = await jwt.sign({ id: user._id, name: user.name }, process.env.JWT_ACCESS_TOKEN, { expiresIn: '15min' })
+        const accessToken = await jwt.sign({ id: user._id, name: user.name }, process.env.JWT_ACCESS_TOKEN, { expiresIn: '1m' })
         const refreshToken = await jwt.sign({ id: user._id, name: user.name }, process.env.JWT_TOKEN, { expiresIn: '7d' })
 
         // Adicionando refresh ao refreshContainer

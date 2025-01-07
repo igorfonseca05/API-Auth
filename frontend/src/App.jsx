@@ -27,11 +27,12 @@ import verifyToken from './hooks/useVerifyToken';
 import { OverlayContextProvider } from './Context/OverlayContext';
 import Overlay from './overlay/Overlay';
 import Page404 from './pages/page404/Page404';
+import LoginProtectedRoute from './components/protectRoutes/LoginProtectedRoute';
 
 
 function App() {
 
-  const { userAuth, error, success, setError, setSuccess } = useAuthContext()
+  const { userAuth, error, success, setError, setSuccess, loading: userLoading } = useAuthContext()
 
   const { verifiedUser, loading } = verifyToken()
 
@@ -45,12 +46,14 @@ function App() {
       position: 'top-left'
     })
 
+    // console.log(error, success)
+
     error && setError('')
     success && setSuccess('')
 
   }, [error, success])
 
-  // if (loading) {
+  // if (userLoading) {
   //   return <p style={{ paddingTop: '59px' }}>Verificando Token, aguarde!...</p>
   // }
 
@@ -60,13 +63,14 @@ function App() {
       {loading ? <p style={{ paddingTop: '59px' }}>Verificando Token, aguarde!...</p> :
         (<BrowserRouter>
           <OverlayContextProvider>
-            <Overlay />
             <ToastContainer></ToastContainer>
+            <Overlay />
             <Navbar />
             <Routes>
               <Route path={'/'} element={<Home />} />
-              <Route path={'/login'} element={!userAuth ? <LoginPage /> : <Navigate to={'/'} />} />
-              <Route path={'/signup'} element={!userAuth ? <SignupPage /> : <Navigate to={'/'} />} />
+
+              <Route path={'/login'} element={userAuth ? <Navigate to={'/'} /> : <LoginPage />} />
+              <Route path={'/signup'} element={userAuth ? <Navigate to={'/'} /> : <SignupPage />} />
 
               {/* rotas protegidas */}
               <Route element={<ProtectedRoute />}>

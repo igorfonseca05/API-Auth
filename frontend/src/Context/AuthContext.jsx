@@ -9,12 +9,14 @@ export function UserAuthContextProvider({ children }) {
     const [userAuth, setUserAuth] = useState(null)
     const [error, setError] = useState(null)
     const [success, setSuccess] = useState(null)
+    const [loading, setLoading] = useState(false)
 
 
     // Salvando dados usuário no localStorage
     useEffect(() => {
-        if (userAuth) {
+        if (userAuth && localStorage.length === 0) {
             localStorage.setItem('userAuth', JSON.stringify(userAuth))
+            console.log('oi')
             return
         }
 
@@ -24,12 +26,22 @@ export function UserAuthContextProvider({ children }) {
     useEffect(() => {
         if (localStorage.length) {
             const userSaved = JSON.parse(localStorage.getItem('userAuth'))
+            console.log('ola')
             setUserAuth(userSaved)
         }
     }, [])
 
     return (
-        <UserAuthContext.Provider value={{ userAuth, setUserAuth, setError, error, success, setSuccess }}>
+        <UserAuthContext.Provider value={{
+            userAuth,
+            setUserAuth,
+            setError,
+            error,
+            success,
+            setSuccess,
+            setLoading,
+            loading
+        }}>
             {children}
         </UserAuthContext.Provider>
     )

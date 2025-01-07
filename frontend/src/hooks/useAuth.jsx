@@ -6,9 +6,9 @@ import verifyToken from "./useVerifyToken";
 
 function useAuth() {
 
-    const [loading, setLoading] = useState(false)
 
-    const { setError, setSuccess, setUserAuth } = useAuthContext()
+
+    const { setError, setSuccess, setUserAuth, setLoading } = useAuthContext()
 
     // logica de criar o usuário
     async function signUp(userInfos) {
@@ -74,7 +74,7 @@ function useAuth() {
 
             const userData = await res.json()
             setUserAuth(userData)
-            // setSuccess(userData.message)
+            setSuccess(userData.message)
             setLoading(false)
             return true
         } catch (error) {
@@ -103,17 +103,18 @@ function useAuth() {
             // const userData = await res.json()
             setUserAuth(null)
             localStorage.removeItem('userAuth')
-            console.log('oi')
-
             return true
 
         } catch (error) {
             setError(error.message)
             return false
+        } finally {
+            setLoading(false)
         }
+
     }
 
-    return { loading, signUp, login, signOut }
+    return { signUp, login, signOut }
 
 }
 
