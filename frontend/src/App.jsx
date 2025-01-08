@@ -53,10 +53,10 @@ function App() {
       position: 'top-left'
     })
 
-    // console.log(error, success)
-
-    error && setError('')
-    success && setSuccess('')
+    setTimeout(() => {
+      error && setError('')
+      success && setSuccess('')
+    }, 2500)
 
   }, [error, success])
 

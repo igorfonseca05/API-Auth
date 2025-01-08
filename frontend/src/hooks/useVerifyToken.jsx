@@ -103,7 +103,7 @@ function verifyToken() {
 
             } catch (error) {
                 removeUserIfError()
-                console.log(error)
+                // console.log(error)
                 setError(error.message)
                 setTimeout(() => { location.reload() }, 3000)
 
