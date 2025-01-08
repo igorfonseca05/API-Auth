@@ -26,7 +26,7 @@ export function UserAuthContextProvider({ children }) {
     useEffect(() => {
         if (localStorage.length) {
             const userSaved = JSON.parse(localStorage.getItem('userAuth'))
-            console.log('ola')
+            console.log('oiu')
             setUserAuth(userSaved)
         }
     }, [])

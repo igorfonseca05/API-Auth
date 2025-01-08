@@ -8,6 +8,8 @@ import useAuth from '../../hooks/useAuth'
 
 function Dropdown({ dropIsOpen, setDropIsOpen }) {
 
+    let isMounted = true
+
     const { setOverlayIsOpen, overlayIsOpen } = useOverlayContext()
     const { signOut } = useAuth()
 
@@ -44,6 +46,7 @@ function Dropdown({ dropIsOpen, setDropIsOpen }) {
 
 
     useEffect(() => {
+
         function closeDropdown(e) {
 
             const clickedElement = e.target.classList
@@ -55,9 +58,16 @@ function Dropdown({ dropIsOpen, setDropIsOpen }) {
             }
         }
 
-        window.addEventListener('click', closeDropdown)
+        if (isMounted) {
+            window.addEventListener('click', closeDropdown)
+        }
 
         return () => window.removeEventListener('click', closeDropdown)
+    }, [])
+
+
+    useEffect(() => {
+        return () => (isMounted = false);
     }, [])
 
     return (

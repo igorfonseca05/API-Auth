@@ -32,7 +32,14 @@ import LoginProtectedRoute from './components/protectRoutes/LoginProtectedRoute'
 
 function App() {
 
-  const { userAuth, error, success, setError, setSuccess, loading: userLoading } = useAuthContext()
+  const {
+    userAuth,
+    error,
+    success,
+    setError,
+    setSuccess,
+    loading: userLoading
+  } = useAuthContext()
 
   const { verifiedUser, loading } = verifyToken()
 
