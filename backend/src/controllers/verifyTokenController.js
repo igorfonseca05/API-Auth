@@ -37,52 +37,52 @@ exports.accessToken = async (req, res) => {
         }
 
         // Verifica o accessToken enviado
-        const decoded = jwt.verify(accessToken, process.env.JWT_ACCESS_TOKEN)
+        const decoded = jwt.verify(accessToken, process.env.JWT_ACCESS_TOKEN, async (error, user) => {
+            if (error) {
+                return res.status(401).json({
+                    status: "error",
+                    message: "Access token inválido ou expirado",
+                    statusCode: res.statusCode,
+                    ok: false,
+                    error: {
+                        type: error.name,
+                        details: error.message
+                    }
+                })
+            }
 
-        console.log(decoded)
+            console.log(user)
 
-        if (!decoded) {
-            return res.status(401).json({
-                status: "error",
-                message: "Access token inválido ou expirado",
-                statusCode: res.statusCode,
-                ok: false,
-                error: {
-                    type: "Invalid accessToken",
-                    details: err.message
-                }
-            })
-        }
+            //     const userExist = await User.findById(user.id)
+            //     if (!userExist) {
+            //         return res.status(404).json({
+            //             status: "error",
+            //             message: "Usuário não encontrado",
+            //             statusCode: res.statusCode,
+            //             ok: false,
+            //             error: {
+            //                 type: "User not found",
+            //                 details: "Usuário não encontrado, verifique os dados inseridos ou cadastre-se"
+            //             }
+            //         })
+            //     }
 
-        const userExist = await User.findById(decoded.id)
-        if (!userExist) {
-            return res.status(404).json({
-                status: "error",
-                message: "Usuário não encontrado",
-                statusCode: res.statusCode,
-                ok: false,
-                error: {
-                    type: "User not found",
-                    details: "Usuário não encontrado, verifique os dados inseridos ou cadastre-se"
-                }
-            })
-        }
+            //     const user = {
+            //         ...userExist._doc,
+            //         access_token: accessToken,
+            //         generatedIn: new Date()
+            //     }
 
-        const user = {
-            ...userExist._doc,
-            access_token: accessToken,
-            generatedIn: new Date()
-        }
+            //     delete user.refreshTokens
+            //     delete user.password
 
-        delete user.refreshTokens
-        delete user.password
-
-        return res.status(200).json({
-            status: 'success',
-            message: 'Token válido',
-            statusCode: res.statusCode,
-            ok: true,
-            user,
+            //     return res.status(200).json({
+            //         status: 'success',
+            //         message: 'Token válido',
+            //         statusCode: res.statusCode,
+            //         ok: true,
+            //         user,
+            //     })
         })
 
 

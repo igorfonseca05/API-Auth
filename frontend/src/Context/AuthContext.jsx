@@ -16,7 +16,7 @@ export function UserAuthContextProvider({ children }) {
     useEffect(() => {
         if (userAuth && localStorage.length === 0) {
             localStorage.setItem('userAuth', JSON.stringify(userAuth))
-            console.log('oi')
+            // console.log('oi')
             return
         }
 
@@ -26,7 +26,7 @@ export function UserAuthContextProvider({ children }) {
     useEffect(() => {
         if (localStorage.length) {
             const userSaved = JSON.parse(localStorage.getItem('userAuth'))
-            console.log('oiu')
+            // console.log('oiu')
             setUserAuth(userSaved)
         }
     }, [])
