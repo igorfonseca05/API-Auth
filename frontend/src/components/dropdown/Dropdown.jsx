@@ -67,7 +67,7 @@ function Dropdown({ dropIsOpen, setDropIsOpen }) {
 
 
     useEffect(() => {
-        return () => (isMounted = false);
+        return () => isMounted = false;
     }, [])
 
     return (

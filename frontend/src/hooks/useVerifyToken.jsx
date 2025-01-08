@@ -30,7 +30,7 @@ function verifyToken() {
             return data?.access_token
 
         } catch (error) {
-            console.log(error)
+            localStorage.clear()
             setError(error.message)
         }
     }
@@ -74,7 +74,8 @@ function verifyToken() {
                     headers: {
                         'Content-Type': 'application/json',
                         Authorization: `Bearer ${user.access_token}`
-                    }
+                    },
+                    credentials: "include"
                 })
 
                 if (!res.ok) {
@@ -102,7 +103,9 @@ function verifyToken() {
 
             } catch (error) {
                 removeUserIfError()
+                console.log(error)
                 setError(error.message)
+                setTimeout(() => { location.reload() }, 3000)
 
             } finally {
                 setLoading(false)

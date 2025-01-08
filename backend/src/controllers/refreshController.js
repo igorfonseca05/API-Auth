@@ -97,7 +97,7 @@ exports.refreshToken = async (req, res) => {
             statusCode: res.statusCode,
             ok: false,
             error: {
-                type: "Unauthorized",
+                type: error.name,
                 details: error.message
             }
         })

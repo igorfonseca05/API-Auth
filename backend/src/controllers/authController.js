@@ -55,7 +55,7 @@ exports.signUp = async (req, res) => {
                 statusCode: res.statusCode,
                 ok: false,
                 error: {
-                    type: "Unauthorized",
+                    type: error.name,
                     details: error.message
                 }
             })
@@ -177,7 +177,7 @@ exports.login = async (req, res) => {
                 role: user.role || '',
                 avatarUrl: user.avatarUrl || '',
                 createdAt: user.createdAt,
-                lastLogin: new Date(),
+                lastLoginAt: new Date(),
                 access_token: acessToken,
             },
         })

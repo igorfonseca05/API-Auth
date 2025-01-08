@@ -75,3 +75,14 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NDcyMmMwYzM0NGZiYzBkYWJiYmNmOSIsImVtYWlsIjoiaWdvcmZvbnNlY2EyN0Bob3RtYWlsLmNvbSIsImlhdCI6MTczNDQzMTUyNiwiZXhwIjoxNzM1MDM2MzI2fQ.EzU3YiOlOzECs_ZjoXwC0pOqsuWCR8b65KybrLt9nYY
 
 ###
+
+PUT http://localhost:3100/updateUserData
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NzdmNTIyMTNhNGYyOTc0NDNjNjE4ZSIsIm5hbWUiOiJpZ29yIiwiaWF0IjoxNzM2MzQ1MTgyLCJleHAiOjE3MzY5NDk5ODJ9.yFzcGZIuH4BjtuPM__GYXQGqgaDWpalWj2Qc2GCQs34
+
+{
+    "name": "igor",
+    "lastName": "Fonseca"
+}
+
+###

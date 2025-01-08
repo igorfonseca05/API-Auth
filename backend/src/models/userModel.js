@@ -8,6 +8,8 @@ const userSchema = new mongoose.Schema({
     password: { type: String, required: true },
     role: { type: String, default: 'user' },
     createdAt: { type: Date, default: Date.now },
+    avatarUrl: { type: String, default: '' },
+    lastUpdate: { type: Date, default: '' },
     refreshTokens: { type: [String], default: [] }
 })
 

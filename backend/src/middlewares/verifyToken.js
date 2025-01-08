@@ -25,7 +25,7 @@ async function verifyToken(req, res, next) {
         const userInfoDecoded = jwt.verify(token, process.env.JWT_TOKEN)
 
         // Verificando se os dados do user estão na base de dados
-        const userId = userInfoDecoded._doc._id
+        const userId = userInfoDecoded.id
         const user = await User.findById(userId)
         if (!user) {
             // Enviando resposta ao frontend para
@@ -51,7 +51,10 @@ async function verifyToken(req, res, next) {
 
         // console.log(user)
 
-        req.body = user
+        req.body = {
+            ...req.body,
+            id: user._id
+        }
 
         next()
 
@@ -63,17 +66,18 @@ async function verifyToken(req, res, next) {
             secure: true
         })
 
-        return res.status(403).json({
-            status: "error",
-            message: "Error desconhecido",
-            statusCode: res.statusCode,
-            ok: false,
-            error: {
-                type: "unknown erro",
-                details: "Impossível rastrar datalhes do erro"
-            },
-            timeStamps: new Date().toISOString()
-        })
+        if (error.message.includes('invalid signature') || error.message.includes("invalid token"))
+            return res.status(403).json({
+                status: "error",
+                message: "Token inválido",
+                statusCode: res.statusCode,
+                ok: false,
+                error: {
+                    type: error.name || "unknow error",
+                    details: error.message
+                },
+                timeStamps: new Date().toISOString()
+            })
     }
 }
 
