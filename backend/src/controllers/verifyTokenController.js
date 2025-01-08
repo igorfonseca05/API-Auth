@@ -37,7 +37,7 @@ exports.accessToken = async (req, res) => {
         }
 
         // Verifica o accessToken enviado
-        const decoded = jwt.verify(accessToken, process.env.JWT_ACCESS_TOKEN, async (error, user) => {
+        jwt.verify(accessToken, process.env.JWT_ACCESS_TOKEN, async (error, user) => {
             if (error) {
                 return res.status(401).json({
                     status: "error",

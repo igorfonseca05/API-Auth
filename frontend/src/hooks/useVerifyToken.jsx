@@ -121,7 +121,6 @@ function verifyToken() {
         }
 
         const isTokenExpired = verifyIfAccessTokenExpired(user)
-        // console.log(isTokenExpired)
 
         if (isTokenExpired) {
             analyseToken()
