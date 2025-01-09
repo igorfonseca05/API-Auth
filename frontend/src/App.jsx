@@ -67,7 +67,13 @@ function App() {
 
   return (
     <>
-      {loading ? <p style={{ paddingTop: '59px' }}>Verificando Token, aguarde!...</p> :
+      {loading ?
+        <>
+          <p className='verifierTokenParagraph' style={{ paddingTop: '59px' }}>Verificando Token, aguarde!...</p>
+          <div className="loader-token">
+            <div className="justify-content-center jimu-primary-loading"></div>
+          </div>
+        </> :
         (<BrowserRouter>
           <OverlayContextProvider>
             <ToastContainer></ToastContainer>
