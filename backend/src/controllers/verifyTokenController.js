@@ -71,18 +71,18 @@ exports.accessToken = async (req, res) => {
                 generatedIn: new Date()
             }
 
-            delete user.refreshTokens
-            delete user.password
+            delete newUser.refreshTokens
+            delete newUser.password
 
-            console.log(user)
+            // console.log(newUser)
 
-            // return res.status(200).json({
-            //     status: 'success',
-            //     message: 'Token válido',
-            //     statusCode: res.statusCode,
-            //     ok: true,
-            //     user,
-            // })
+            return res.status(200).json({
+                status: 'success',
+                message: 'Token válido',
+                statusCode: res.statusCode,
+                ok: true,
+                user: { ...newUser }
+            })
         })
 
 

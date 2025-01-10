@@ -87,7 +87,7 @@ function verifyToken() {
                             // Alterando valor do access token para novo valor
                             SwitchingAccessTokenByNewAccessToken(getNewAccessToken)
                             // analyseToken()
-                            setTokenExpired(!expiredToken)
+                            setExpiredToken(!expiredToken)
                         }
                         return
                     }
