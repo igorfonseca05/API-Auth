@@ -9,7 +9,7 @@ function verifyToken() {
     const [verifiedUser, setVerifiedUser] = useState(false)
     const [loading, setLoading] = useState(false)
 
-    const [user, setUser] = useState((JSON.parse(localStorage.getItem('userAuth')))?.user)
+    // const [user, setUser] = useState((JSON.parse(localStorage.getItem('userAuth')))?.user)
     const [expiredToken, setExpiredToken] = useState(false)
 
     // Helper Functions
@@ -54,6 +54,8 @@ function verifyToken() {
     // Effect to fire the token's analysis
     useEffect(() => {
 
+        if (!JSON.parse(localStorage.getItem('userAuth'))) return
+
         async function analyseToken() {
             setError('')
             setLoading(true)
@@ -62,8 +64,7 @@ function verifyToken() {
                 // Obterá o accessToken do login ou o retornado pela rota do refreshToken
 
                 const { user } = JSON.parse(localStorage.getItem('userAuth'))
-
-                if (!user) return
+                // console.log(user)
 
                 const res = await fetch('http://localhost:3100/verifyToken', {
                     method: 'POST',
@@ -73,6 +74,7 @@ function verifyToken() {
                     },
                     credentials: "include"
                 })
+
 
                 if (!res.ok) {
                     if (res.status === 401) {
@@ -124,11 +126,14 @@ function verifyToken() {
 
     useEffect(() => {
 
-        if (!user) {
+        if (!JSON.parse(localStorage.getItem('userAuth'))) {
             setVerifiedUser(false)
+            // console.log('io')
             setLoading(false)
             return
         }
+
+        const { user } = JSON.parse(localStorage.getItem('userAuth'))
 
         const isTokenExpired = verifyIfAccessTokenExpired(user)
 

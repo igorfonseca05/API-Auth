@@ -51,38 +51,38 @@ exports.accessToken = async (req, res) => {
                 })
             }
 
+            const userExist = await User.findById(user.id)
+            if (!userExist) {
+                return res.status(404).json({
+                    status: "error",
+                    message: "Usuário não encontrado",
+                    statusCode: res.statusCode,
+                    ok: false,
+                    error: {
+                        type: "User not found",
+                        details: "Usuário não encontrado, verifique os dados inseridos ou cadastre-se"
+                    }
+                })
+            }
+
+            const newUser = {
+                ...userExist._doc,
+                access_token: accessToken,
+                generatedIn: new Date()
+            }
+
+            delete user.refreshTokens
+            delete user.password
+
             console.log(user)
 
-            //     const userExist = await User.findById(user.id)
-            //     if (!userExist) {
-            //         return res.status(404).json({
-            //             status: "error",
-            //             message: "Usuário não encontrado",
-            //             statusCode: res.statusCode,
-            //             ok: false,
-            //             error: {
-            //                 type: "User not found",
-            //                 details: "Usuário não encontrado, verifique os dados inseridos ou cadastre-se"
-            //             }
-            //         })
-            //     }
-
-            //     const user = {
-            //         ...userExist._doc,
-            //         access_token: accessToken,
-            //         generatedIn: new Date()
-            //     }
-
-            //     delete user.refreshTokens
-            //     delete user.password
-
-            //     return res.status(200).json({
-            //         status: 'success',
-            //         message: 'Token válido',
-            //         statusCode: res.statusCode,
-            //         ok: true,
-            //         user,
-            //     })
+            // return res.status(200).json({
+            //     status: 'success',
+            //     message: 'Token válido',
+            //     statusCode: res.statusCode,
+            //     ok: true,
+            //     user,
+            // })
         })
 
 
