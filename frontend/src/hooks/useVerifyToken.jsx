@@ -10,7 +10,7 @@ function verifyToken() {
     const [loading, setLoading] = useState(false)
 
     const [user, setUser] = useState((JSON.parse(localStorage.getItem('userAuth')))?.user)
-    const [expiredToken, setTokenExpired] = useState(false)
+    const [expiredToken, setExpiredToken] = useState(false)
 
     // Helper Functions
     function removeUserIfError() {
@@ -19,16 +19,12 @@ function verifyToken() {
 
     function saveUserData(userData) {
         localStorage.setItem('userAuth', JSON.stringify(userData))
-        setUser(userData)
     }
 
     function SwitchingAccessTokenByNewAccessToken(token) {
         const data = JSON.parse(localStorage.getItem('userAuth'))
         delete data.user.access_token
         const newUser = { ...data, user: { ...data.user, access_token: token } }
-
-        console.log(newUser)
-
         saveUserData(newUser)
     }
 
@@ -65,6 +61,8 @@ function verifyToken() {
             try {
                 // Obterá o accessToken do login ou o retornado pela rota do refreshToken
 
+                const { user } = JSON.parse(localStorage.getItem('userAuth'))
+
                 if (!user) return
 
                 const res = await fetch('http://localhost:3100/verifyToken', {
@@ -87,6 +85,7 @@ function verifyToken() {
                             // Alterando valor do access token para novo valor
                             SwitchingAccessTokenByNewAccessToken(getNewAccessToken)
                             // analyseToken()
+                            setTokenExpired(!expiredToken)
                         }
                         return
                     }
@@ -134,7 +133,7 @@ function verifyToken() {
         const isTokenExpired = verifyIfAccessTokenExpired(user)
 
         if (isTokenExpired) {
-            setTokenExpired(true)
+            setExpiredToken(true)
         }
 
     }, [])
