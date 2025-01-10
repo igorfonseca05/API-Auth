@@ -1,4 +1,7 @@
-# Funcionalidades da API de Autenticação
+![Group 18](https://github.com/user-attachments/assets/9b79622d-c9d4-4029-a999-d9c6603b0a25)
+
+# API de Autenticação
+
 
 A API de autenticação foi projetada para fornecer um sistema seguro e eficiente de gerenciamento de autenticação e autorização. Abaixo estão as principais funcionalidades implementadas:
 
