@@ -1,6 +1,8 @@
 {
   "dependencies": {
+    "argon2": "^0.41.1",
     "express": "^4.21.2",
+    "mongodb": "^6.12.0",
     "mongoose": "^8.8.4",
     "nodemon": "^3.1.7",
     "yargs": "^17.7.2"
@@ -12,7 +14,6 @@
   "name": "playground",
   "version": "1.0.0",
   "main": "app.js",
-  "devDependencies": {},
   "author": "",
   "license": "ISC",
   "description": ""

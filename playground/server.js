@@ -1,6 +1,7 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const path = require('path')
+const argon2 = require('argon2')
 
 
 const app = express()
@@ -21,6 +22,18 @@ mongoose.connect('mongodb://localhost:27017/user')
     .catch((error) => {
         console.log('erro')
     })
+
+
+async function hash() {
+    const senha = 'fonseca05'
+
+    const passwordHash = await argon2.hash(senha)
+
+    console.log(await argon2.verify(passwordHash, senha))
+}
+
+hash()
+
 
 
 app.get('/', async (req, res) => {
