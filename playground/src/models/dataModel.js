@@ -5,6 +5,8 @@ const dataSchema = new mongoose.Schema({
     email: { type: String }
 })
 
+
+
 const userData = mongoose.model('userData', dataSchema, 'userData')
 
 module.exports = userData

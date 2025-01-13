@@ -1,12 +1,17 @@
 const express = require('express')
 const mongoose = require('mongoose')
+const path = require('path')
+
 
 const app = express()
 
 const userData = require('./src/models/dataModel')
+const publicPath = path.join(__dirname, '../public')
+const root = { root: path.join(__dirname, 'public') }
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+app.use(express.static(publicPath))
 
 mongoose.connect('mongodb://localhost:27017/user')
     .then(() => {
@@ -19,13 +24,13 @@ mongoose.connect('mongodb://localhost:27017/user')
 
 
 app.get('/', async (req, res) => {
-    try {
 
-    } catch (error) {
+    res.status(200).sendFile('home.html', { root: path.join(__dirname, 'public') })
 
-    }
-    res.status(200).json({ message: 'Bem vindo ao servidor' })
+})
 
+app.get('/help', (req, res) => {
+    res.sendFile('ajuda.html', root)
 })
 
 app.post('/form', async (req, res) => {
