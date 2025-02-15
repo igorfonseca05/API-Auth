@@ -18,4 +18,4 @@ Usamos esse commando para criar um **package.json** na nossa aplicação, que se
 
      npm i express mongoose nodemon --save-dev dotenv
 
-Eles serão adicionados ao package.json como dependencias. Na raiz do projeto vamos criar o **server.js** que é onde vamos adicionar toda a lógica por trás do servidor.
+Eles serão adicionados ao package.json como dependencias. Na raiz do projeto vamos criar o **server.js** que é onde será adicionada toda a lógica por trás do servidor.
