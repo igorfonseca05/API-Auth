@@ -427,6 +427,20 @@ exports.signUp = async (req, res) => {
     if (existUser) {
       throw new Error("Usuário já cadastrado");
     }
-  } catch {}
+
+    const newUser = new UserModel({ name, email, password });
+
+    try {
+      await newUser.save();
+      res.status(201).json({
+        message: "Usuário criado com sucesso",
+        newUser,
+      });
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  } catch (error) {
+    res.status(401).json({ message: error.message });
+  }
 };
 ```
