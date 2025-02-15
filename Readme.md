@@ -413,6 +413,8 @@ dbEvents.on("connected", () => {
 
 Agora podemos adicionar um primeiro usuário a base de dados e responde-lo usando JSON.
 
+# Rota signup
+
 ```javascript
 const UserModel = require("../model/userModel"); // Importando model
 
