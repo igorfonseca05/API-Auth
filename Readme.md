@@ -8,7 +8,26 @@
 API-authentication é um projeto desenvolvido em função da necessidade de se aplicar conhecimentos adquiridos em estudos
 da linguagem **javascript** no lado do servidor em projetos reais. Criado com diversos pacotes publicos disponiveis no NPM, esse projeto dispoe de diversas funcionalidades como **sign-up**, **login** e entre outras. Essa documentação foi criada no intuito de servir como uma anotação para consultas futuras, de modo que todo o conteúdo apresentado aqui será o mais completo e detalhado possível.
 
-# Passos iniciais
+# Configurações iniciais
+
+Neste projeto usaremos o modelo MVC(Model, viewers, controllers), onde a requisição chega ao servidor, é direcionada
+ao routes que analisa qual endpoint buscar (auth/users), direcionando a solicitação ao Middleware que vai fazer algum
+tipo de tratamento nos dados e chegar ao controller que é onde será respondida a solicitação. Esse fluxo pode ser visto
+no diagrama abaixo
+
+    Client Request ---> Server ---> Routes.js ---> Middleware ---> Controller ---> Response
+
+pois podemos trabalhar com separação de responsabilidades:
+
+- **Routes:** Determinam "para onde" a requisição vai com base no endpoint.
+- **Middleware:** Adiciona camadas para pré-processamento (como autenticação ou validação).
+- **Controller:** Contém a lógica de processamento de requisições.
+- **Response:** Contém a resposta da requisições.
+
+Vamos iniciar a configuração do nosso projeto com base no fluxo mostrado acima, ou seja, vamos criar os arquivos server
+Router e os demais de modo que as requisições fluem até o controller e então criaremos toda a lógica da resposta.
+
+## :one: Servidor, routes e controllers
 
 Para iniciar o projeto, no terminal do VS Code dentro do diretório da pasta onde vai criar os arquivo do projeto digite
 
@@ -20,7 +39,7 @@ Usamos esse commando para criar um **package.json** na nossa aplicação, que se
 
 Eles serão adicionados ao package.json como dependencias. Na raiz do projeto deve-se criar o arquivo **server.js** que é onde será adicionada toda a lógica por trás do servidor.
 
-### server.js
+### Servidor config - server.js
 
 ```javascript
 require(".dotenv").config(); // Carrega as variáveis de ambiente do arquivo .env para process.env
@@ -42,25 +61,15 @@ app.listen(port, () => {
 });
 ```
 
-Aqui será utilizado o padrão MVC(Model, viewers, controllers)
+### Routes - router.js
 
-    Client Request ---> Server ---> Routes.js ---> Middleware ---> Controller ---> Response
-
-pois podemos trabalhar com separação de responsabilidades:
-
-- **Routes:** Determinam "para onde" a requisição vai com base no endpoint.
-- **Middleware:** Adiciona camadas para pré-processamento (como autenticação ou validação).
-- **Controller:** Contém a lógica de processamento de requisições.
-- **Response:** Contém a resposta da requisições.
-
-Crie um pasta nomeada de **src** (source) na raiz do projeto, dentro dela a pasta **Controller** e **Routes**. Primeiro organizamos as rotas.
+Crie um pasta nomeada de **src** (source) na raiz do projeto, dentro dela a pasta **Routes**.
 
     API-Authentication
     |
     |- node_modules 🗃️
     |
     |--src 🗃️
-    |   |-Controller 📁
     |   |-routes 📁
     |
     |- package.json 📄
@@ -73,16 +82,17 @@ No arquivo routes vamos cria o arquivo chamado **routes.js** e junto com ele o a
     |- node_modules 🗃️
     |
     |--src 🗃️
-    |   |-Controller 📁
     |   |-routes 📁
     |      |- users.js 📄
     |      |- auth.js 📄
-    |      |- index.js 📄
+    |      |- routes.js 📄
     |
     |- package.json 📄
     |- server.js 📄
 
-no **index.js** faremos:
+no **routes.js** faremos:
+
+### routes.js
 
 ```javascript
 const express = require("express"); // Importa o módulo 'express' para criar o roteador
@@ -102,7 +112,7 @@ module.exports = router; // Exporta o roteador para que ele possa ser usado em o
 
 nos arquivos **users** e **auth** que são importados acima, adicionaremos as rotas publicas e privadas do nosso sistema de autenticação, pode ser visto abaixo:
 
-## auth.js :closed_lock_with_key:
+### auth.js :closed_lock_with_key:
 
 ```javascript const express = require('express')
 const route = express.Router();
@@ -119,7 +129,7 @@ route.post("/logoutAll", authController.logoutAll); // Rota para fazer logout de
 module.exports = route;
 ```
 
-## users.js :busts_in_silhouette:
+### users.js :busts_in_silhouette:
 
 ```javascript const express = require('express')  // Importa o módulo 'express' para criar o roteador
 const route = express.Router(); // Cria um novo roteador usando o express.Router()
@@ -144,6 +154,8 @@ const userController = require("../controllers/usersControllers");
 
 é dentro desses controllers que iremos condensar todas as rotas que manipularão os dados e responderão os usuário.
 
+# Controllers
+
 Com todas as rotas criadas e configuradas, vamos agora na pasta **controlers** e criar os arquivos **authController.js** e **usersControllers.js**, de modo que a estrutura do nosso projeto até o momento seja:
 
     API-Authentication
@@ -164,7 +176,7 @@ Com todas as rotas criadas e configuradas, vamos agora na pasta **controlers** e
 
 Dentro desses arquivos faremos:
 
-## authController.js :lock:
+### authController.js :lock:
 
 ```javascript
 exports.signUp = async (req, res) => {}; // Controlador responsável por criar um novo usuário
@@ -176,7 +188,7 @@ exports.logout = async (req, res) => {}; // Controlador responsável por realiza
 exports.logoutAll = async (req, res) => {}; // Controlador responsável por realizar o logout de todos os dispositivos
 ```
 
-## usersController.js :busts_in_silhouette:
+### usersController.js :busts_in_silhouette:
 
 ```javascript
 exports.getusers = async (req, res) => {}; // Rota para obter o perfil do usuário autenticado
@@ -194,9 +206,13 @@ exports.getAvatar = async (req, res) => {}; // Rota para obter a foto de perfil 
 
 Vamos adicionar a lógica necessaria em cada uma das rotas acima de modo decrescente.
 
-# Rotas 📍
+# Base de dados 🗄️
 
-A primeira rota que vamos que vamos configurar dentro da nossa API é a rota **signup**, que é a rota responsável por adicionar nossa usuário na base de dados. Mas antes de iniciarmos a configuração da rota precisamos criar o **model** que é, em termos simples, o modelo estrutural que usaremos para estruturar nossos dados na base de dados.  
+Como vamos iniciar nossa API pela rota de signup, precisamos estabelecer a conexão com a base de dados, uma vez que
+na rota em questão precisamos salvar as credenciais do usuário e isso só é possivel se tivermos onde salvar os dados.
+
+## Model - userModel.js
+
 Dentro da pasta **src** criamos uma terceira pasta chamada _model_ e dentro dela um arquivo que nomearemos como _userModel.js_.
 
     API-Authentication
@@ -333,31 +349,30 @@ que é a string de conexão que o mongoose vai utilizar para conectar com a base
 
 Agora esses arquivos não serão mais mapeados para o github e não corremos o risco de expor dados sensiveis da nossa aplicação. Para finalizar a conexão com a base de dados, precisamos importar esse arquivo no arquivo server para que quando o servidor seja iniciado, a conexão seja estabelecida e o evento ` dbEvents.emit("connected")` seja disparado e então o servidor liberado.
 
-# 1°- Atualização servidor
+## 1°- Atualização servidor
 
 #### server.js (Conexão com a base)
 
 ```javascript
-require(".dotenv").config(); // Carrega as variáveis de ambiente do arquivo .env para process.env
+require(".dotenv").config();
 
-const express = require("express"); // Importa o framework Express para criar o servidor
+const express = require("express");
 
-const app = express(); // Cria uma instância do servidor com Express
+const app = express();
 
-// server config
-const port = process.env.port || 5000; // Define a porta do servidor (process.env.port ou 5000)
+const port = process.env.port || 5000;
 
-// DB
+// Conexão com a base de dados (1° atualizações)
 const { dbEvents } = require("/src/db/dbConnection");
 
 app.get("/", (req, res) => {
-  res.send("Bem vindo a API"); // Configura a rota principal (/) para responder com "Bem vindo a API"
+  res.send("Bem vindo a API");
 });
 
 dbEvents.on("connected", () => {
   app.listen(port, () => {
-    console.log("Servidor on"); // Exibe mensagem indicando que o servidor está ativo
-    console.log(`Acesse em http://localhost:${port}`); // Informa a URL para acessar o servidor
+    console.log("Servidor on");
+    console.log(`Acesse em http://localhost:${port}`);
   });
 });
 ```
@@ -377,43 +392,119 @@ dbEvents.on("connected", () => {
 
 indica que o servidor só será liberado após o sinal "connected" ser emitido. Feito a atualização acima, vc deve ser capaz de acessar o servidor já com a base conectada.
 
-# 2°- Atualização servidor
+## 2°- Atualização servidor
 
 Com a base de dados configurada, já quase podemos iniciar as configurações das nossas rotas, porém nosso servidor ainda não é capaz de interpretar e responder requisições no formato `JSON` e nem de receber objetos complexos no corpo da requisição. Para resolver isso teremos de atualizar nosso arquivo **server.js**.
 
 #### server.js (Conexão com a base | JSON e extended)
 
 ```javascript
-require(".dotenv").config(); // Carrega as variáveis de ambiente do arquivo .env para process.env
-const express = require("express"); // Importa o framework Express para criar o servidor
+require(".dotenv").config();
+const express = require("express");
 
-const app = express(); // Cria uma instância do servidor com Express
+const app = express();
 
-// server config
-const port = process.env.port || 5000; // Define a porta do servidor (process.env.port ou 5000)
+const port = process.env.port || 5000;
 
-// DB (1° atualização)
 const { dbEvents } = require("/src/db/dbConnection");
 
-// midlewares (2° atualização)
+// Middlewares (2° atualização)
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.get("/", (req, res) => {
-  res.send("Bem vindo a API"); // Configura a rota principal (/) para responder com "Bem vindo a API"
+  res.send("Bem vindo a API");
 });
 
 dbEvents.on("connected", () => {
   app.listen(port, () => {
-    console.log("Servidor on"); // Exibe mensagem indicando que o servidor está ativo
-    console.log(`Acesse em http://localhost:${port}`); // Informa a URL para acessar o servidor
+    console.log("Servidor on");
+    console.log(`Acesse em http://localhost:${port}`);
   });
 });
 ```
 
 Agora podemos adicionar um primeiro usuário a base de dados e responde-lo usando JSON.
 
-# Rota signup
+# :two: Middlewares
+
+Um outro conceito que é muito importante para aprendermos antes de colocarmos a mão na massa, é o de middleware.  
+Um middleware é uma função que intercepta requisições (request) e respostas (response) no fluxo de uma aplicação, executando lógica antes de alcançar o manipulador final da rota. Ele pode ser usado para tarefas como autenticação, logging, manipulação de dados ou tratamento de erros. Middleware é aplicado globalmente ou em rotas específicas e funciona em uma sequência definida. No Express, usa-se app.use() ou diretamente na rota.
+
+No nosso projeto teremos dois middlewares principais, o que será responsável por validar os dados enviados no corpo da
+requisição e um de verificação de token. Na pasta **src** crie:
+
+    📁 API-Authentication
+    ├── 📁 node_modules 🗃️
+    │
+    ├── 📁 src 🗃️
+    │   ├── 📁 controllers 📁
+    │   │   ├── authController.js 📄
+    │   │   ├── usersController.js 📄
+    │   │
+    │   ├── 📁 db 📁
+    │   │   └── db.js 📄
+    │   │
+    │   ├── 📁 middleware 📁
+    │   │   ├── userValidator.js 📄
+    │   │   └── verifyToken.js 📄
+    │   │
+    │   ├── 📁 model 📁
+    │   │   └── userModel.js 📄
+    │   │
+    │   ├── 📁 routes 📁
+    │   │   ├── users.js 📄
+    │   │   ├── auth.js 📄
+    │   │   └── index.js 📄
+    │
+    ├── .env 📄
+    ├── .gitignore 📄
+    ├── package.json 📄
+    ├── server.js 📄
+
+## userValidator.js
+
+No terminal do VSCode digite
+
+    npm i validator
+
+uma vez instalado, no arquivo `userValidator.js` faremos
+
+```javascript
+
+const validator = require('validator')
+
+function validate(req, res, next) {
+
+  const {name. email, password} = req.body
+
+  if(!name || name.length <= 2) {
+    return res.status(400).json({message: 'O nome deve conter no minimo 3 caracteres'})
+  }
+
+  if(!email || validor.isEmail(email)) {
+    return res.status(400).json({message: 'Formato de email inválido'})
+  }
+
+  if(!password || validator.isLength(password, {min: 6})) {
+    return res.status(400).json({message: 'Senha deve conter no minimo 6 caracteres'})
+  }
+
+  next()
+
+}
+
+module.exports = validate
+
+
+
+```
+
+# :three: Rotas 📍
+
+Com as primeiras configurações feitas, podemos iniciar a lógica dentro dos controllers [Controllers](#controllers)
+
+# signup
 
 ```javascript
 const UserModel = require("../model/userModel"); // Importando model
