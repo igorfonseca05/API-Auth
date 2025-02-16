@@ -1,7 +1,25 @@
 ![Group 18](https://github.com/user-attachments/assets/9b79622d-c9d4-4029-a999-d9c6603b0a25)
 
-- [Introdução](#introducao)
-- [Casa](#casa)
+# Índice 📑
+
+- [Introdução](#introdução)
+- [Configurações iniciais](#configurações-iniciais)
+- [Servidor 🖥️](#1️⃣-servidor)
+  - [server.js](#serverjs-🖥️)
+- [Rotas 🗺️](#2️⃣-router)
+  - [routes.js](#routesjs)
+  - [auth.js 🔐](#authjs-🔐)
+  - [users.js 👥](#usersjs-👥)
+- [Controllers 🕹️](#controllers-🕹️)
+  - [authController.js 🔒](#authcontrollerjs-🔒)
+  - [usersController 👥](#userscontrollerjs-👥)
+- [Base de dados 🗄️](#base-de-dados-🗄️)
+  - [Model](#model---usermodeljs)
+    - [userModel.js 📦](#usermodeljs-📦)
+  - [Conectando a base de dados 💾](#conectando-a-base-de-dados-💾)
+    - [db.js 🗄️](#dbjs-🗄️)
+    - [1° atualização do servidor](#1--atualização-servidor)
+    - [2° atualização do servidor](#2--atualização-servidor)
 
 # Introdução
 
@@ -27,7 +45,7 @@ pois podemos trabalhar com separação de responsabilidades:
 Vamos iniciar a configuração do nosso projeto com base no fluxo mostrado acima, ou seja, vamos criar os arquivos server
 Router e os demais de modo que as requisições fluem até o controller e então criaremos toda a lógica da resposta.
 
-## :one: Servidor, routes e controllers
+## :one: Servidor
 
 Para iniciar o projeto, no terminal do VS Code dentro do diretório da pasta onde vai criar os arquivo do projeto digite
 
@@ -39,7 +57,7 @@ Usamos esse commando para criar um **package.json** na nossa aplicação, que se
 
 Eles serão adicionados ao package.json como dependencias. Na raiz do projeto deve-se criar o arquivo **server.js** que é onde será adicionada toda a lógica por trás do servidor.
 
-### Servidor config - server.js
+### server.js 🖥️
 
 ```javascript
 require(".dotenv").config(); // Carrega as variáveis de ambiente do arquivo .env para process.env
@@ -61,21 +79,9 @@ app.listen(port, () => {
 });
 ```
 
-### Routes - router.js
+## :two: Router
 
-Crie um pasta nomeada de **src** (source) na raiz do projeto, dentro dela a pasta **Routes**.
-
-    API-Authentication
-    |
-    |- node_modules 🗃️
-    |
-    |--src 🗃️
-    |   |-routes 📁
-    |
-    |- package.json 📄
-    |- server.js 📄
-
-No arquivo routes vamos cria o arquivo chamado **routes.js** e junto com ele o arquivo **users.js** e o **auth.js**
+Aqui vamos configurar para onde nosso servidor vai redirecionar as requisições e quais rotas o usuário vai poder acessar. Para isso crie um pasta nomeada de **src** (source) na raiz do projeto, dentro dela a pasta **Routes**, que terá os arquivos **routes.js**, **users.js** e **auth.js** como mostrado abaixo:
 
     API-Authentication
     |
@@ -90,9 +96,9 @@ No arquivo routes vamos cria o arquivo chamado **routes.js** e junto com ele o a
     |- package.json 📄
     |- server.js 📄
 
-no **routes.js** faremos:
+no arquivo **routes.js** faremos:
 
-### routes.js
+### router.js 🗺️
 
 ```javascript
 const express = require("express"); // Importa o módulo 'express' para criar o roteador
@@ -112,7 +118,7 @@ module.exports = router; // Exporta o roteador para que ele possa ser usado em o
 
 nos arquivos **users** e **auth** que são importados acima, adicionaremos as rotas publicas e privadas do nosso sistema de autenticação, pode ser visto abaixo:
 
-### auth.js
+### auth.js 🔐
 
 ```javascript const express = require('express')
 const route = express.Router();
@@ -154,7 +160,7 @@ const userController = require("../controllers/usersControllers");
 
 é dentro desses controllers que iremos condensar todas as rotas que manipularão os dados e responderão os usuário.
 
-# Controllers
+# Controllers 🕹️
 
 Com todas as rotas criadas e configuradas, vamos agora na pasta **controlers** e criar os arquivos **authController.js** e **usersControllers.js**, de modo que a estrutura do nosso projeto até o momento seja:
 
@@ -176,7 +182,7 @@ Com todas as rotas criadas e configuradas, vamos agora na pasta **controlers** e
 
 Dentro desses arquivos faremos:
 
-### authController.js :lock:
+### authController.js 🔒
 
 ```javascript
 exports.signUp = async (req, res) => {}; // Controlador responsável por criar um novo usuário
@@ -188,7 +194,7 @@ exports.logout = async (req, res) => {}; // Controlador responsável por realiza
 exports.logoutAll = async (req, res) => {}; // Controlador responsável por realizar o logout de todos os dispositivos
 ```
 
-### usersController.js :busts_in_silhouette:
+### usersController.js 👥
 
 ```javascript
 exports.getusers = async (req, res) => {}; // Rota para obter o perfil do usuário autenticado
@@ -211,9 +217,11 @@ Vamos adicionar a lógica necessaria em cada uma das rotas acima de modo decresc
 Como vamos iniciar nossa API pela rota de signup, precisamos estabelecer a conexão com a base de dados, uma vez que
 na rota em questão precisamos salvar as credenciais do usuário e isso só é possivel se tivermos onde salvar os dados.
 
-## Model - userModel.js
+## Model
 
-Dentro da pasta **src** criamos uma terceira pasta chamada _model_ e dentro dela um arquivo que nomearemos como _userModel.js_.
+Um **model** em uma aplicação representa a estrutura e as regras de um dado armazenado no banco de dados. Ele define os campos, tipos de dados e validações necessários para criar e manipular esses dados. Além disso, o model permite interagir com o banco de dados, como realizar consultas, atualizações, exclusões e adições. É usado para centralizar a lógica de negócios relacionada às informações. Em geral, o model é uma peça do padrão **MVC** (Model-View-Controller).
+
+Dentro da pasta **src** criamos uma terceira pasta chamada **model** e dentro dela um arquivo que nomearemos como _userModel.js_.
 
     API-Authentication
     |
@@ -232,7 +240,7 @@ Dentro da pasta **src** criamos uma terceira pasta chamada _model_ e dentro dela
     |--package.json 📄
     |--server.js 📄
 
-Com o model criado, dentro do arquivo faremos:
+Dentro de **userModel.js** faremos
 
 ## userModel.js 📦
 
@@ -520,7 +528,11 @@ route.post("/logoutAll", authController.logoutAll);
 module.exports = route;
 ```
 
-## Middleware Verificar token
+com os dados sendo validados. Vamos iniciar a implementação das nossas rotas.
+
+<!-- ## Middleware Verificar token
+
+Quando o assunto é autenticação, precisamos de alguma forma garantir que a pessoa que vai acessar as paginas privadas na nossa aplicação, seja quem ela diz ser. Para isso implementamos a rota no qual o usuário faz o signup e o login e nesse processo garantimos que ele receba um código que contem informações sobre o usuário e o enviamos quando respondermos a requisição do usuário.  -->
 
 # :three: Rotas 📍
 
