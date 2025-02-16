@@ -112,7 +112,7 @@ module.exports = router; // Exporta o roteador para que ele possa ser usado em o
 
 nos arquivos **users** e **auth** que são importados acima, adicionaremos as rotas publicas e privadas do nosso sistema de autenticação, pode ser visto abaixo:
 
-### auth.js :closed_lock_with_key:
+### auth.js
 
 ```javascript const express = require('express')
 const route = express.Router();
@@ -495,9 +495,27 @@ function validate(req, res, next) {
 }
 
 module.exports = validate
+```
 
+O middleware acima será adicionado no meio da rota de [signup](#authjs), como podemos ver abaixo:
 
+**routes.js**:
 
+```javascript
+const route = express.Router();
+
+const authController = require("../controllers/authController");
+
+const validator = require("../middlewares/userValidator");
+
+// Middleware Validator
+route.post("/signup", validator, authController.signUp);
+
+route.post("/login", authController.signIn);
+route.post("/logout", authController.logout);
+route.post("/logoutAll", authController.logoutAll);
+
+module.exports = route;
 ```
 
 # :three: Rotas 📍
