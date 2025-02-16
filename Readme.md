@@ -23,7 +23,7 @@
 - [Middlewares](#2️⃣-middlewares)
   - [Middleware Validator](#middleware-validator)
     - [userValidator.js](#uservalidatorjs)
-- [Rotas 📍](#3️⃣-rotas-📍)
+- [Rotas 📍](#3--rotas)
   - [signup](#signup)
     - [Hash da senha](#hash)
 
