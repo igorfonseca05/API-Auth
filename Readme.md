@@ -462,13 +462,15 @@ requisição e um de verificação de token. Na pasta **src** crie:
     ├── package.json 📄
     ├── server.js 📄
 
-## userValidator.js
+## Middleware Validator
 
-No terminal do VSCode digite
+Esse middleware será responsavel por validar os dados enviados no corpo da requisição. Para podermos escrever a lógica associada, vamos instalar o Validator. No terminal do VSCode digite
 
     npm i validator
 
 uma vez instalado, no arquivo `userValidator.js` faremos
+
+### userValidator.js
 
 ```javascript
 
@@ -517,6 +519,8 @@ route.post("/logoutAll", authController.logoutAll);
 
 module.exports = route;
 ```
+
+## Middleware Verificar token
 
 # :three: Rotas 📍
 
