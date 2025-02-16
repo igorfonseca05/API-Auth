@@ -1,6 +1,6 @@
 ![Group 18](https://github.com/user-attachments/assets/9b79622d-c9d4-4029-a999-d9c6603b0a25)
 
-# Índice 📑
+# Índice
 
 - [Introdução](#introdução)
 - [Configurações iniciais](#configurações-iniciais)
@@ -584,9 +584,9 @@ com os dados sendo validados. Vamos iniciar a implementação das nossas rotas.
 
 Quando o assunto é autenticação, precisamos de alguma forma garantir que a pessoa que vai acessar as paginas privadas na nossa aplicação, seja quem ela diz ser. Para isso implementamos a rota no qual o usuário faz o signup e o login e nesse processo garantimos que ele receba um código que contem informações sobre o usuário e o enviamos quando respondermos a requisição do usuário.  -->
 
-# :three: Rotas 📍
+# 3- Rotas
 
-[Voltar ao topo 🔝](#índice-📑)
+[Voltar ao topo 🔝](#índice)
 
 Com as primeiras configurações feitas, podemos iniciar a lógica dentro dos controllers [Controllers](#controllers). Destaco que o codigo mostrads abaixo são basicos e que a medida em que formos adicionando novas funcionalidades, serão inclusas novas linhas de código.
 
