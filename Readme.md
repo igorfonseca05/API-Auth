@@ -24,6 +24,8 @@
   - [Middleware Validator](#middleware-validator)
     - [userValidator.js](#uservalidatorjs)
 - [Rotas 📍](#3️⃣-rotas-📍)
+  - [signup](#signup)
+    - [Hash da senha](#hash)
 
 # Introdução
 
@@ -586,9 +588,134 @@ Quando o assunto é autenticação, precisamos de alguma forma garantir que a pe
 
 [Voltar ao topo 🔝](#índice-📑)
 
-Com as primeiras configurações feitas, podemos iniciar a lógica dentro dos controllers [Controllers](#controllers)
+Com as primeiras configurações feitas, podemos iniciar a lógica dentro dos controllers [Controllers](#controllers). Destaco que o codigo mostrads abaixo são basicos e que a medida em que formos adicionando novas funcionalidades, serão inclusas novas linhas de código.
 
 # signup
+
+[Voltar ao topo 🔝](#índice-📑)
+
+```javascript
+const UserModel = require("../model/userModel"); // Importando model
+
+exports.signUp = async (req, res) => {
+  const { email, name, password } = req.body; // obtendo dados do formulário
+
+  try {
+    const existUser = await UserModel.findOne({ email });
+
+    if (existUser) {
+      throw new Error("Usuário já cadastrado");
+    }
+
+    const newUser = new UserModel({ name, email, password });
+
+    try {
+      await newUser.save();
+      res.status(201).json({
+        message: "Usuário criado com sucesso",
+        newUser,
+      });
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  } catch (error) {
+    res.status(401).json({ message: error.message });
+  }
+};
+```
+
+Ao escrever o código acima e simular uma requisição, veremos os dados salvos na base de dados, algo parecido com o mostrado abaixo:
+
+```json
+{
+  "_id": "new ObjectId('213asf5554s5533525')",
+  "name": "Caio",
+  "email": "caio@gmail.com",
+  "password": "123456"
+}
+```
+
+Porém a senha não pode ser salva em **texto plano** na base de dados, uma vez que se alguém invadir sua base de dados, terá acesso aos dados do usuário. Para resolver isso, teremos de fazer o **hash** da senha.
+
+### Hash
+
+[Voltar ao topo 🔝](#índice-📑)
+
+O hash é um processo de transformar uma senha em uma sequência única e fixa de caracteres, usando um algoritmo como bcrypt ou argon2. Ele é irreversível, ou seja, não é possível converter o hash de volta para a senha original. Quando o usuário tenta fazer login, a senha fornecida é novamente transformada em hash e comparada com o hash armazenado. Isso garante que a senha original nunca seja salva no banco de dados, aumentando a segurança. Além disso, técnicas como "salting" (adicionar valores aleatórios) tornam os hashes únicos, mesmo para senhas iguais. Um hash pode ser visto abaixo.
+
+    $2b$12$IHoTahYqFX3wPKLtvi.6/uM1xpIdcfZBYVgmvY2sMCepqY61aUkXe
+
+Para proteger a senha dos usuários vamos precisar instalar argon2
+
+    npm i argon2
+
+dentro do [userModel.js](#usermodeljs-📦)
+
+```javascript
+
+const mongoose = require("mongoose");
+const argon2 = require('argon2')
+
+const userSchema = new mongoose.Schema({
+  userName: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+    trim: true,
+  },
+  password: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+});
+
+// Fazendo hash da senha (1° atualização)
+userSchema.pre("save", (next) => {
+  const user = this;
+
+  try {
+
+    if (!user.isModified(password)) return next();
+
+    user.passoword = await argon2.sign(password, {
+      type: argon2.argon2id,
+      memoryCost: 2 ** 16,
+      timeCost: 5,
+      paralelism: 1,
+    })
+
+    next()
+
+  } catch(error) {
+    next(error)
+  }
+});
+
+const userData = mongoose.model("Users", userSchema);
+
+module.exports = userData;
+```
+
+Agora o que será salvo na base de dados é o hash da senha, e não a senha como texto plano. Limpe a base de dados e cadatre um novo usuário, o resultado deve ser algo como
+
+```json
+{
+  "_id": "new ObjectId('213asf5554s5533525')",
+  "name": "Caio",
+  "email": "caio@gmail.com",
+  "password": "$2b$12$IHoTahYqFX3wPKLtvi.6/uM1xpIdcfZBYVgmvY2sMCepqY61aUkXe"
+}
+```
+
+# login
+
+[Voltar ao topo 🔝](#índice-📑)
 
 ```javascript
 const UserModel = require("../model/userModel"); // Importando model
