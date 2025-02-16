@@ -4,22 +4,22 @@
 
 - [Introdução](#introdução)
 - [Configurações iniciais](#configurações-iniciais)
-- [Servidor 🖥️](#1️⃣-servidor)
-  - [server.js](#serverjs-🖥️)
-- [Rotas 🗺️](#2️⃣-router)
-  - [routes.js 🗺️](#routerjs-🗺️)
-  - [auth.js 🔐](#authjs-🔐)
-  - [users.js 👥](#usersjs-👥)
-- [Controllers 🕹️](#controllers-🕹️)
-  - [authController.js 🔒](#authcontrollerjs-🔒)
-  - [usersController 👥](#userscontrollerjs-👥)
-- [Base de dados 🗄️](#base-de-dados-🗄️)
-  - [Model](#model)
-    - [userModel.js 📦](#usermodeljs-📦)
-  - [Conectando a base de dados 💾](#conectando-a-base-de-dados-💾)
-    - [db.js 🗄️](#dbjs-🗄️)
-    - [1° atualização do servidor 🔄](#1---atualização-do-arquivo-serverjs-🔄)
-    - [2° atualização do servidor 🔄](#2---atualização-do-arquivo-serverjs-🔄)
+- [Servidor 🖥️](#1---servidor)
+  - [server.js](#serverjs)
+- [Rotas 🗺️](#2---router)
+  - [routes.js 🗺️](#21---routerjs)
+  - [auth.js 🔐](#22---authjs)
+  - [users.js 👥](#23---usersjs)
+- [Controllers 🕹️](#3---controllerscontrollers)
+  - [authController.js 🔒](#31---authcontrollerjs)
+  - [usersController 👥](#32---userscontrollerjs)
+- [Base de dados 🗄️](#4---base-de-dados)
+  - [Model](#41---model)
+    - [userModel.js 📦](#42---usermodeljs)
+  - [Conectando a base de dados 💾](#44---conectando-a-base-de-dados)
+    - [db.js 🗄️](#441---dbjs)
+    - [1° atualização do servidor 🔄](#1---atualização-do-arquivo-serverjs)
+    - [2° atualização do servidor 🔄](#2---atualização-do-arquivo-serverjs)
 - [Middlewares](#2️⃣-middlewares)
   - [Middleware Validator](#middleware-validator)
     - [userValidator.js](#uservalidatorjs)
@@ -29,14 +29,14 @@
 
 # Introdução
 
-[Voltar ao topo 🔝](#índice-📑)
+[Voltar ao topo 🔝](#índice)
 
 API-authentication é um projeto desenvolvido em função da necessidade de se aplicar conhecimentos adquiridos em estudos
 da linguagem **javascript** no lado do servidor em projetos reais. Criado com diversos pacotes publicos disponiveis no NPM, esse projeto dispoe de diversas funcionalidades como **sign-up**, **login** e entre outras. Essa documentação foi criada no intuito de servir como uma anotação para consultas futuras, de modo que todo o conteúdo apresentado aqui será o mais completo e detalhado possível.
 
 # Configurações iniciais
 
-[Voltar ao topo 🔝](#índice-📑)
+[Voltar ao topo 🔝](#índice)
 
 Neste projeto usaremos o modelo MVC(Model, viewers, controllers), onde a requisição chega ao servidor, é direcionada
 ao routes que analisa qual endpoint buscar (auth/users), direcionando a solicitação ao Middleware que vai fazer algum
@@ -55,9 +55,9 @@ pois podemos trabalhar com separação de responsabilidades:
 Vamos iniciar a configuração do nosso projeto com base no fluxo mostrado acima, ou seja, vamos criar os arquivos server
 Router e os demais de modo que as requisições fluem até o controller e então criaremos toda a lógica da resposta.
 
-## :one: Servidor
+## 1 - Servidor
 
-[Voltar ao topo 🔝](#índice-📑)
+[Voltar ao topo 🔝](#índice)
 
 Para iniciar o projeto, no terminal do VS Code dentro do diretório da pasta onde vai criar os arquivo do projeto digite
 
@@ -69,9 +69,9 @@ Usamos esse commando para criar um **package.json** na nossa aplicação, que se
 
 Eles serão adicionados ao package.json como dependencias. Na raiz do projeto deve-se criar o arquivo **server.js** que é onde será adicionada toda a lógica por trás do servidor.
 
-### server.js 🖥️
+### server.js
 
-[Voltar ao topo 🔝](#índice-📑)
+[Voltar ao topo 🔝](#índice)
 
 ```javascript
 require(".dotenv").config(); // Carrega as variáveis de ambiente do arquivo .env para process.env
@@ -93,9 +93,9 @@ app.listen(port, () => {
 });
 ```
 
-## :two: Router
+## 2 - Router
 
-[Voltar ao topo 🔝](#índice-📑)
+[Voltar ao topo 🔝](#índice)
 
 Aqui vamos configurar para onde nosso servidor vai redirecionar as requisições e quais rotas o usuário vai poder acessar. Para isso crie um pasta nomeada de **src** (source) na raiz do projeto, dentro dela a pasta **Routes**, que terá os arquivos **routes.js**, **users.js** e **auth.js** como mostrado abaixo:
 
@@ -114,9 +114,9 @@ Aqui vamos configurar para onde nosso servidor vai redirecionar as requisições
 
 no arquivo **routes.js** faremos:
 
-### router.js 🗺️
+### 2.1 - router.js
 
-[Voltar ao topo 🔝](#índice-📑)
+[Voltar ao topo 🔝](#índice)
 
 ```javascript
 const express = require("express"); // Importa o módulo 'express' para criar o roteador
@@ -136,9 +136,9 @@ module.exports = router; // Exporta o roteador para que ele possa ser usado em o
 
 nos arquivos **users** e **auth** que são importados acima, adicionaremos as rotas publicas e privadas do nosso sistema de autenticação, pode ser visto abaixo:
 
-### auth.js 🔐
+### 2.2 - auth.js
 
-[Voltar ao topo 🔝](#índice-📑)
+[Voltar ao topo 🔝](#índice)
 
 ```javascript const express = require('express')
 const route = express.Router();
@@ -155,9 +155,9 @@ route.post("/logoutAll", authController.logoutAll); // Rota para fazer logout de
 module.exports = route;
 ```
 
-### users.js :busts_in_silhouette:
+### 2.3 - users.js
 
-[Voltar ao topo 🔝](#índice-📑)
+[Voltar ao topo 🔝](#índice)
 
 ```javascript const express = require('express')  // Importa o módulo 'express' para criar o roteador
 const route = express.Router(); // Cria um novo roteador usando o express.Router()
@@ -182,9 +182,9 @@ const userController = require("../controllers/usersControllers");
 
 é dentro desses controllers que iremos condensar todas as rotas que manipularão os dados e responderão os usuário.
 
-# Controllers 🕹️
+# 3 - Controllers
 
-[Voltar ao topo 🔝](#índice-📑)
+[Voltar ao topo 🔝](#índice)
 
 Com todas as rotas criadas e configuradas, vamos agora na pasta **controlers** e criar os arquivos **authController.js** e **usersControllers.js**, de modo que a estrutura do nosso projeto até o momento seja:
 
@@ -206,9 +206,9 @@ Com todas as rotas criadas e configuradas, vamos agora na pasta **controlers** e
 
 Dentro desses arquivos faremos:
 
-### authController.js 🔒
+### 3.1 - authController.js
 
-[Voltar ao topo 🔝](#índice-📑)
+[Voltar ao topo 🔝](#índice)
 
 ```javascript
 exports.signUp = async (req, res) => {}; // Controlador responsável por criar um novo usuário
@@ -220,9 +220,9 @@ exports.logout = async (req, res) => {}; // Controlador responsável por realiza
 exports.logoutAll = async (req, res) => {}; // Controlador responsável por realizar o logout de todos os dispositivos
 ```
 
-### usersController.js 👥
+### 3.2 - usersController.js
 
-[Voltar ao topo 🔝](#índice-📑)
+[Voltar ao topo 🔝](#índice)
 
 ```javascript
 exports.getusers = async (req, res) => {}; // Rota para obter o perfil do usuário autenticado
@@ -240,16 +240,16 @@ exports.getAvatar = async (req, res) => {}; // Rota para obter a foto de perfil 
 
 Vamos adicionar a lógica necessaria em cada uma das rotas acima de modo decrescente.
 
-# Base de dados 🗄️
+# 4 - Base de dados
 
-[Voltar ao topo 🔝](#índice-📑)
+[Voltar ao topo 🔝](#índice)
 
 Como vamos iniciar nossa API pela rota de signup, precisamos estabelecer a conexão com a base de dados, uma vez que
 na rota em questão precisamos salvar as credenciais do usuário e isso só é possivel se tivermos onde salvar os dados.
 
-## Model
+## 4.1 - Model
 
-[Voltar ao topo 🔝](#índice-📑)
+[Voltar ao topo 🔝](#índice)
 
 Um **model** em uma aplicação representa a estrutura e as regras de um dado armazenado no banco de dados. Ele define os campos, tipos de dados e validações necessários para criar e manipular esses dados. Além disso, o model permite interagir com o banco de dados, como realizar consultas, atualizações, exclusões e adições. É usado para centralizar a lógica de negócios relacionada às informações. Em geral, o model é uma peça do padrão **MVC** (Model-View-Controller).
 
@@ -274,9 +274,9 @@ Dentro da pasta **src** criamos uma terceira pasta chamada **model** e dentro de
 
 Dentro de **userModel.js** faremos
 
-## userModel.js 📦
+## 4.2 - userModel.js
 
-[Voltar ao topo 🔝](#índice-📑)
+[Voltar ao topo 🔝](#índice)
 
 ```javascript
 const mongoose = require("mongoose");
@@ -319,9 +319,9 @@ No model acima adicionamos algumas configurações que são importantes no inici
 
 Antes de falarmos da senha e caracteristicas dos dados quando os salvamos na base de dados, precisamos primeiro ter onde salvar os dados, e sem a conexão com a base isso é impossivel.
 
-## Conectando a base de dados 💾
+## 4.4 - Conectando a base de dados
 
-[Voltar ao topo 🔝](#índice-📑)
+[Voltar ao topo 🔝](#índice)
 
 Na pasta **src** vamos adicinar a pasta _DB_ onde criamos o arquivo _db.js_, que será o responsavel por toda a logica da conexão com a base de dados
 
@@ -340,9 +340,9 @@ Na pasta **src** vamos adicinar a pasta _DB_ onde criamos o arquivo _db.js_, que
     ├── package.json 📄
     ├── server.js 📄
 
-### db.js 🗄️
+### 4.4.1 - db.js
 
-[Voltar ao topo 🔝](#índice-📑)
+[Voltar ao topo 🔝](#índice)
 
 ```javascript
 const mongoose = require("mongoose");
@@ -395,9 +395,9 @@ que é a string de conexão que o mongoose vai utilizar para conectar com a base
 
 Agora esses arquivos não serão mais mapeados para o github e não corremos o risco de expor dados sensiveis da nossa aplicação. Para finalizar a conexão com a base de dados, precisamos importar esse arquivo no arquivo server para que quando o servidor seja iniciado, a conexão seja estabelecida e o evento ` dbEvents.emit("connected")` seja disparado e então o servidor liberado.
 
-## 1 - Atualização do arquivo server.js 🔄
+## 1 - Atualização do arquivo server.js
 
-[Voltar ao topo 🔝](#índice-📑)
+[Voltar ao topo 🔝](#índice)
 
 :warning: A parte de texto comentada é que a que foi adicionada ao código.
 
@@ -442,9 +442,9 @@ dbEvents.on("connected", () => {
 
 indica que o servidor só será liberado após o sinal "connected" ser emitido. Feito a atualização acima, vc deve ser capaz de acessar o servidor já com a base conectada.
 
-## 2 - Atualização do arquivo server.js 🔄
+## 2 - Atualização do arquivo server.js
 
-[Voltar ao topo 🔝](#índice-📑)
+[Voltar ao topo 🔝](#índice)
 
 Com a base de dados configurada, já quase podemos iniciar as configurações das nossas rotas, porém nosso servidor ainda não é capaz de interpretar e responder requisições no formato `JSON` e nem de receber objetos complexos no corpo da requisição. Para resolver isso teremos de atualizar nosso arquivo **server.js**.
 
@@ -480,7 +480,7 @@ Agora podemos adicionar um primeiro usuário a base de dados e responde-lo usand
 
 # :two: Middlewares
 
-[Voltar ao topo 🔝](#índice-📑)
+[Voltar ao topo 🔝](#índice)
 
 Um outro conceito que é muito importante para aprendermos antes de colocarmos a mão na massa, é o de middleware.  
 Um middleware é uma função que intercepta requisições (request) e respostas (response) no fluxo de uma aplicação, executando lógica antes de alcançar o manipulador final da rota. Ele pode ser usado para tarefas como autenticação, logging, manipulação de dados ou tratamento de erros. Middleware é aplicado globalmente ou em rotas específicas e funciona em uma sequência definida. No Express, usa-se app.use() ou diretamente na rota.
@@ -518,7 +518,7 @@ requisição e um de verificação de token. Na pasta **src** crie:
 
 ## Middleware Validator
 
-[Voltar ao topo 🔝](#índice-📑)
+[Voltar ao topo 🔝](#índice)
 
 Esse middleware será responsavel por validar os dados enviados no corpo da requisição. Para podermos escrever a lógica associada, vamos instalar o Validator. No terminal do VSCode digite
 
@@ -528,7 +528,7 @@ uma vez instalado, no arquivo `userValidator.js` faremos
 
 ### userValidator.js
 
-[Voltar ao topo 🔝](#índice-📑)
+[Voltar ao topo 🔝](#índice)
 
 ```javascript
 
@@ -592,7 +592,7 @@ Com as primeiras configurações feitas, podemos iniciar a lógica dentro dos co
 
 # signup
 
-[Voltar ao topo 🔝](#índice-📑)
+[Voltar ao topo 🔝](#índice)
 
 ```javascript
 const UserModel = require("../model/userModel"); // Importando model
@@ -639,7 +639,7 @@ Porém a senha não pode ser salva em **texto plano** na base de dados, uma vez 
 
 ### Hash
 
-[Voltar ao topo 🔝](#índice-📑)
+[Voltar ao topo 🔝](#índice)
 
 O hash é um processo de transformar uma senha em uma sequência única e fixa de caracteres, usando um algoritmo como bcrypt ou argon2. Ele é irreversível, ou seja, não é possível converter o hash de volta para a senha original. Quando o usuário tenta fazer login, a senha fornecida é novamente transformada em hash e comparada com o hash armazenado. Isso garante que a senha original nunca seja salva no banco de dados, aumentando a segurança. Além disso, técnicas como "salting" (adicionar valores aleatórios) tornam os hashes únicos, mesmo para senhas iguais. Um hash pode ser visto abaixo.
 
@@ -715,7 +715,7 @@ Agora o que será salvo na base de dados é o hash da senha, e não a senha como
 
 # login
 
-[Voltar ao topo 🔝](#índice-📑)
+[Voltar ao topo 🔝](#índice)
 
 ```javascript
 const UserModel = require("../model/userModel"); // Importando model
