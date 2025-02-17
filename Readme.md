@@ -15,11 +15,11 @@
   - [usersController 👥](#32---userscontrollerjs)
 - [Base de dados 🗄️](#4---base-de-dados)
   - [Model](#41---model)
-    - [userModel.js 📦](#42---usermodeljs)
-  - [Conectando a base de dados 💾](#44---conectando-a-base-de-dados)
-    - [db.js 🗄️](#441---dbjs)
-    - [1° atualização do servidor 🔄](#1---atualização-do-arquivo-serverjs)
-    - [2° atualização do servidor 🔄](#2---atualização-do-arquivo-serverjs)
+    - [userModel.js 📦](#411---usermodeljs)
+  - [Conectando a base de dados 💾](#42---conectando-a-base-de-dados)
+    - [db.js 🗄️](#421---dbjs)
+    - [1° atualização do servidor 🔄](#422---atualização-do-arquivo-serverjss)
+    - [2° atualização do servidor 🔄](#423---atualização-do-arquivo-serverjs)
 - [Middlewares](#2️⃣-middlewares)
   - [Middleware Validator](#middleware-validator)
     - [userValidator.js](#uservalidatorjs)
@@ -274,7 +274,7 @@ Dentro da pasta **src** criamos uma terceira pasta chamada **model** e dentro de
 
 Dentro de **userModel.js** faremos
 
-## 4.2 - userModel.js
+### 4.1.1 - userModel.js
 
 [Voltar ao topo 🔝](#índice)
 
@@ -319,7 +319,7 @@ No model acima adicionamos algumas configurações que são importantes no inici
 
 Antes de falarmos da senha e caracteristicas dos dados quando os salvamos na base de dados, precisamos primeiro ter onde salvar os dados, e sem a conexão com a base isso é impossivel.
 
-## 4.4 - Conectando a base de dados
+## 4.2 - Conectando a base de dados
 
 [Voltar ao topo 🔝](#índice)
 
@@ -340,7 +340,7 @@ Na pasta **src** vamos adicinar a pasta _DB_ onde criamos o arquivo _db.js_, que
     ├── package.json 📄
     ├── server.js 📄
 
-### 4.4.1 - db.js
+### 4.2.1 - db.js
 
 [Voltar ao topo 🔝](#índice)
 
@@ -395,13 +395,13 @@ que é a string de conexão que o mongoose vai utilizar para conectar com a base
 
 Agora esses arquivos não serão mais mapeados para o github e não corremos o risco de expor dados sensiveis da nossa aplicação. Para finalizar a conexão com a base de dados, precisamos importar esse arquivo no arquivo server para que quando o servidor seja iniciado, a conexão seja estabelecida e o evento ` dbEvents.emit("connected")` seja disparado e então o servidor liberado.
 
-## 1 - Atualização do arquivo server.js
+### 4.2.2 - Atualização do arquivo server.js
 
 [Voltar ao topo 🔝](#índice)
 
 :warning: A parte de texto comentada é que a que foi adicionada ao código.
 
-#### server.js (Conexão com a base)
+**server.js (Conexão com a base)**
 
 ```javascript
 require(".dotenv").config();
@@ -442,7 +442,7 @@ dbEvents.on("connected", () => {
 
 indica que o servidor só será liberado após o sinal "connected" ser emitido. Feito a atualização acima, vc deve ser capaz de acessar o servidor já com a base conectada.
 
-## 2 - Atualização do arquivo server.js
+### 4.2.3 - Atualização do arquivo server.js
 
 [Voltar ao topo 🔝](#índice)
 
@@ -478,7 +478,7 @@ dbEvents.on("connected", () => {
 
 Agora podemos adicionar um primeiro usuário a base de dados e responde-lo usando JSON.
 
-# :two: Middlewares
+# Middlewares
 
 [Voltar ao topo 🔝](#índice)
 
