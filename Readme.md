@@ -279,6 +279,7 @@ Dentro de **userModel.js** faremos
 [Voltar ao topo 🔝](#índice)
 
 ```javascript
+// Todo pacote importado em atualizações no Model devem ser adicionados abaixo do mongoose
 const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema({
@@ -302,7 +303,7 @@ const userSchema = new mongoose.Schema({
 
 // _______________________________
 
-// Toda nova atualização deve ser feito entre as linhas na ordem mostrada abaixo
+// Toda a lógica das atualização devem ser feitas entre as linhas na ordem mostrada abaixo
 // .
 // .
 // 3° atualização
@@ -667,6 +668,7 @@ dentro do [userModel.js](#411---usermodeljs) adicione
 ```javascript
 // No topo do arquivo adicione
 const argon2 = require('argon2')
+
 
 // Função de hash da senha
 userSchema.pre("save", (next) => {
