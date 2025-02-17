@@ -713,6 +713,9 @@ Agora o que será salvo na base de dados é o hash da senha, e não a senha como
 }
 ```
 
+Uma vez que temos o usuário cadastrado na base de dados, podemos implementar a logica que o permite utilizar os dados
+cadastrados para fazer login.
+
 # login
 
 [Voltar ao topo 🔝](#índice)
