@@ -651,8 +651,9 @@ Para proteger a senha dos usuários vamos precisar instalar argon2
 
 dentro do [userModel.js](#usermodeljs-📦)
 
-```javascript
+### userModel update 1
 
+```javascript
 const mongoose = require("mongoose");
 const argon2 = require('argon2')
 
@@ -713,7 +714,7 @@ Agora o que será salvo na base de dados é o hash da senha, e não a senha como
 }
 ```
 
-Uma vez que temos o usuário cadastrado na base de dados, podemos implementar a logica que o permite utilizar os dados
+Uma vez que temos o usuário cadastrado na base de dados, podemos implementar a lógica que o permite utilizar os dados
 cadastrados para fazer login.
 
 # login
@@ -721,31 +722,46 @@ cadastrados para fazer login.
 [Voltar ao topo 🔝](#índice)
 
 ```javascript
-const UserModel = require("../model/userModel"); // Importando model
+const UserModel = require("../model/userModel");
+const argon2 = require("argon2");
 
-exports.signUp = async (req, res) => {
-  const { email, name, password } = req.body; // obtendo dados do formulário
-
+exports.login = async (req, res) => {
   try {
-    const existUser = await UserModel.findOne({ email });
+    const existUser = await UserModel.findByCredentials(req.body); // Vamos criar esse método no userModel
 
-    if (existUser) {
-      throw new Error("Usuário já cadastrado");
-    }
-
-    const newUser = new UserModel({ name, email, password });
-
-    try {
-      await newUser.save();
-      res.status(201).json({
-        message: "Usuário criado com sucesso",
-        newUser,
-      });
-    } catch (error) {
-      throw new Error(error.message);
-    }
+    res.status(201).json({
+      message: "Usuário criado com sucesso",
+      newUser,
+    });
   } catch (error) {
     res.status(401).json({ message: error.message });
   }
 };
 ```
+
+no [userModel update 1](#usermodel-update-1) vamos adicionar o código mostrado abaixo
+
+```javascript
+// No topo do arquivo adicione
+const argon2 = require("argon2");
+
+// Acima da função de fazer hash da senha adicione
+userSchema.statics.findByCredentials = async function ({ email, password }) {
+  const user = this;
+  const existUser = await User.findOne({ email });
+
+  if (!existUser) {
+    throw new Error("Usuário não cadastrado");
+  }
+
+  const isValidPassword = await argon2.verify(existUser.password, password);
+
+  if (!isValidPassword) {
+    throw new Error("Usuário não cadastrado");
+  }
+
+  return existUser;
+};
+```
+
+O código acima anexamos um novo método ao model de modo que agora, podemos involado sempre que precisarmos verificar se o usuário está existe na base de dados.
