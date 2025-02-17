@@ -300,6 +300,17 @@ const userSchema = new mongoose.Schema({
   },
 });
 
+// _______________________________
+
+// Toda nova atualização deve ser feito entre as linhas na ordem mostrada abaixo
+// .
+// .
+// 3° atualização
+// 2° atualização
+// 1° atualização
+
+// _______________________________
+
 // Definindo o modelo de dados "Users" baseado no esquema "userSchema"
 const userData = mongoose.model("Users", userSchema);
 
@@ -649,13 +660,15 @@ Para proteger a senha dos usuários vamos precisar instalar argon2
 
     npm i argon2
 
-dentro do [userModel.js](#usermodeljs-📦) adicione
+dentro do [userModel.js](#411---usermodeljs) adicione
+
+### 1° atualização -Model
 
 ```javascript
 // No topo do arquivo adicione
 const argon2 = require('argon2')
 
-// Função de hash da senha (1° atualização)
+// Função de hash da senha
 userSchema.pre("save", (next) => {
   const user = this;
 
