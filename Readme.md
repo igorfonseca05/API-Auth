@@ -649,34 +649,13 @@ Para proteger a senha dos usuários vamos precisar instalar argon2
 
     npm i argon2
 
-dentro do [userModel.js](#usermodeljs-📦)
-
-### userModel update 1
+dentro do [userModel.js](#usermodeljs-📦) adicione
 
 ```javascript
-const mongoose = require("mongoose");
+// No topo do arquivo adicione
 const argon2 = require('argon2')
 
-const userSchema = new mongoose.Schema({
-  userName: {
-    type: String,
-    required: true,
-    trim: true,
-  },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-    trim: true,
-  },
-  password: {
-    type: String,
-    required: true,
-    trim: true,
-  },
-});
-
-// Fazendo hash da senha (1° atualização)
+// Função de hash da senha (1° atualização)
 userSchema.pre("save", (next) => {
   const user = this;
 
@@ -698,6 +677,7 @@ userSchema.pre("save", (next) => {
   }
 });
 
+// Toda atualização deve ser adicionada acima dessas diretivas
 const userData = mongoose.model("Users", userSchema);
 
 module.exports = userData;
@@ -727,25 +707,27 @@ const argon2 = require("argon2");
 
 exports.login = async (req, res) => {
   try {
-    const existUser = await UserModel.findByCredentials(req.body); // Vamos criar esse método no userModel
+    const user = await UserModel.findByCredentials(req.body); // Vamos criar esse método no userModel
 
-    res.status(201).json({
-      message: "Usuário criado com sucesso",
-      newUser,
+    return res.status(200).json({
+      success: true,
+      message: "Login realizado com sucesso.",
+      user,
     });
   } catch (error) {
-    res.status(401).json({ message: error.message });
+    return res.status(401).json({
+      success: false,
+      message: error.message,
+      user: null,
+    });
   }
 };
 ```
 
-no [userModel update 1](#usermodel-update-1) vamos adicionar o código mostrado abaixo
+no [userModel.js](#411---usermodeljs) vamos adicionar o código mostrado abaixo
 
 ```javascript
-// No topo do arquivo adicione
-const argon2 = require("argon2");
-
-// Acima da função de fazer hash da senha adicione
+// Acima da função de fazer hash da senha adicione (2° atualização)
 userSchema.statics.findByCredentials = async function ({ email, password }) {
   const user = this;
   const existUser = await User.findOne({ email });
@@ -764,4 +746,4 @@ userSchema.statics.findByCredentials = async function ({ email, password }) {
 };
 ```
 
-O código acima anexamos um novo método ao model de modo que agora, podemos involado sempre que precisarmos verificar se o usuário está existe na base de dados.
+O código acima anexamos um novo método ao model de modo que agora, podemos invocá-lo sempre que precisarmos verificar se o usuário está existe na base de dados.
