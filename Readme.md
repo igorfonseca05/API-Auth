@@ -26,6 +26,7 @@
 - [Rotas 📍](#3--rotas)
   - [signup](#signup)
     - [Hash da senha](#hash)
+  - [Login](#login)
 
 # Introdução
 
