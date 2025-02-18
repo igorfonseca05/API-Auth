@@ -605,50 +605,7 @@ Com as primeiras configurações feitas, podemos iniciar a lógica dentro dos co
 
 # signup
 
-[Voltar ao topo 🔝](#índice)
-
-```javascript
-const UserModel = require("../model/userModel"); // Importando model
-
-exports.signUp = async (req, res) => {
-  const { email, name, password } = req.body; // obtendo dados do formulário
-
-  try {
-    const existUser = await UserModel.findOne({ email });
-
-    if (existUser) {
-      throw new Error("Usuário já cadastrado");
-    }
-
-    const newUser = new UserModel({ name, email, password });
-
-    try {
-      await newUser.save();
-      res.status(201).json({
-        message: "Usuário criado com sucesso",
-        newUser,
-      });
-    } catch (error) {
-      throw new Error(error.message);
-    }
-  } catch (error) {
-    res.status(401).json({ message: error.message });
-  }
-};
-```
-
-Ao escrever o código acima e simular uma requisição, veremos os dados salvos na base de dados, algo parecido com o mostrado abaixo:
-
-```json
-{
-  "_id": "new ObjectId('213asf5554s5533525')",
-  "name": "Caio",
-  "email": "caio@gmail.com",
-  "password": "123456"
-}
-```
-
-Porém a senha não pode ser salva em **texto plano** na base de dados, uma vez que se alguém invadir sua base de dados, terá acesso aos dados do usuário. Para resolver isso, teremos de fazer o **hash** da senha.
+Rota de sign-up é a rota que utilizamos para cadastrar um usuário ao nosso projeto, todavia, antes de se implementar essa rota na aplicação é necessário fazermos o hash da senha senha para que ela não fique em texto plano e gerar um token para o usuário nas rotas de signup e login, que é essencialmente uma forma de assinar o usuário digitalmente, ou seja, é uma forma de informar ao servidor que o usuário que está tentando fazer login na aplicação é realmente quem diz ser.
 
 ### Hash
 
@@ -712,6 +669,112 @@ Agora o que será salvo na base de dados é o hash da senha, e não a senha como
 
 Uma vez que temos o usuário cadastrado na base de dados, podemos implementar a lógica que o permite utilizar os dados
 cadastrados para fazer login.
+
+### Token
+
+Um token é uma chave única usada para confirmar a identidade de um usuário ou aplicação. Ele é gerado ao fazer login e permite acessar recursos de forma segura. Tokens têm prazo de validade e podem ser cancelados, sendo muito usados em APIs e sistemas de autenticação.
+
+Como utilizaremos a criação de tokens em mais de uma rota, iremos adiciona-lo ao model e atrela-lo aos documentos que forem criados pelo model, mas antes precisamos alterar o model, uma vez que queremos dar a oportunidade do usuário acessar sua conta em diversos dispositivos. No [usermodel.js](#411---usermodeljs) vamos adicionar um novo campo.
+
+```javascript
+const userSchema = new mongoose.Schema({
+  userName: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+    trim: true,
+  },
+  password: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  tokens: [
+    {
+      token: {
+        type: String,
+        required: true,
+      },
+    },
+  ], // tokens será um array de objetos
+});
+```
+
+. Para isso faremos:
+
+No terminal instale o pacote:
+
+    npm i jsonwebtoken
+
+Dentro do [usermodel.js](#411---usermodeljs) adicionamos:
+
+```javascript
+// Inclua no top do model
+const jwt = require("jsonwebtoken");
+
+// Método gerar token
+
+userSchema.methods.generateToken = function () {
+  const user = this;
+
+  const userToken = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
+    expiresIn: "7d",
+  });
+
+  try {
+  } catch (error) {}
+};
+```
+
+[Voltar ao topo 🔝](#índice)
+
+```javascript
+const UserModel = require("../model/userModel"); // Importando model
+
+exports.signUp = async (req, res) => {
+  const { email, name, password } = req.body; // obtendo dados do formulário
+
+  try {
+    const existUser = await UserModel.findOne({ email });
+
+    if (existUser) {
+      throw new Error("Usuário já cadastrado");
+    }
+
+    const newUser = new UserModel({ name, email, password });
+
+    try {
+      await newUser.save();
+      res.status(201).json({
+        message: "Usuário criado com sucesso",
+        newUser,
+      });
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  } catch (error) {
+    res.status(401).json({ message: error.message });
+  }
+};
+```
+
+Ao escrever o código acima e simular uma requisição, veremos os dados salvos na base de dados, algo parecido com o mostrado abaixo:
+
+```json
+{
+  "_id": "new ObjectId('213asf5554s5533525')",
+  "name": "Caio",
+  "email": "caio@gmail.com",
+  "password": "123456"
+}
+```
+
+Porém a senha não pode ser salva em **texto plano** na base de dados, uma vez que se alguém invadir sua base de dados, terá acesso aos dados do usuário. Para resolver isso, teremos de fazer o **hash** da senha.
 
 # login
 
