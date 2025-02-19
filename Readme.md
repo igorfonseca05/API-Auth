@@ -672,6 +672,8 @@ cadastrados para fazer login.
 
 ### Token
 
+[Voltar ao topo 🔝](#índice)
+
 Um token é uma chave única usada para confirmar a identidade de um usuário ou aplicação. Ele é gerado ao fazer login e permite acessar recursos de forma segura. Tokens têm prazo de validade e podem ser cancelados, sendo muito usados em APIs e sistemas de autenticação.
 
 Como utilizaremos a criação de tokens em mais de uma rota, iremos adiciona-lo ao model e atrela-lo aos documentos que forem criados pelo model, mas antes precisamos alterar o model, uma vez que queremos dar a oportunidade do usuário acessar sua conta em diversos dispositivos. No [usermodel.js](#411---usermodeljs) vamos adicionar um novo campo.
@@ -720,19 +722,41 @@ const jwt = require("jsonwebtoken");
 // Método gerar token
 
 userSchema.methods.generateToken = async function () {
-  const user = this;
+  const user = this; // 'this' se refere ao usuário atual
 
+  // Gerando o token JWT com o ID do usuário, utilizando a chave secreta do ambiente
   const userToken = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
-    expiresIn: "7d",
+    expiresIn: "7d", // O token vai expirar em 7 dias
   });
 
-  user.tokens.push(userToken);
+  // Verificando se o usuário já tem 4 tokens. Se sim, remove o mais antigo
+  if (user.tokens.length >= 4) {
+    return user.tokens?.shift();
+  }
 
-  return userToken;
+  // Se não tiver 4 tokens, adiciona o novo token à lista de tokens do usuário
+  user.tokens?.push({ userToken });
+
+  return userToken; // Retorna o token gerado
 };
 ```
 
-[Voltar ao topo 🔝](#índice)
+No metodo acima, usamos o `process.env.JWT_SECRET`, que é a string que o json web token usa para assinar os tokens e poder decodifica-los posteriormente. Podemos criar essa chave de muitas formas difentes, mas é importante lembrar que ela deve ser uma senha muito forte, visto que é com essa senha que nosso servidor será capaz de garantir ou não acesso ao nosso site, e caso caia em mãos erradas, o atacante terá acesso total ao sistema. Recomendo que execute o resultado abaixo no terminal do VScode e use a saida como senha.
+
+    node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
+
+Para usar o valor gerado como senha do servidor, no arquivo .env adicionamos
+
+```javascript
+JWT_SECRET = K8wHSvZHndOTPtQJYLYsx2DBOCL1n6DTEXQL8bGhb+U=
+```
+
+Agora temos uma senha segura que garante ao nosso servidor seja capaz de impedir tokens falsificados.
+Vamos utilizar todos os passos acima para garantir a segurança da nossa aplicação nas rotas que implementaremos.
+
+Na rota signup faremos:
+
+### sign-up code
 
 ```javascript
 const UserModel = require("../model/userModel"); // Importando model
@@ -748,6 +772,7 @@ exports.signUp = async (req, res) => {
     }
 
     const newUser = new UserModel({ name, email, password });
+    await newUser.generateToken();
 
     try {
       await newUser.save();
@@ -763,19 +788,6 @@ exports.signUp = async (req, res) => {
   }
 };
 ```
-
-Ao escrever o código acima e simular uma requisição, veremos os dados salvos na base de dados, algo parecido com o mostrado abaixo:
-
-```json
-{
-  "_id": "new ObjectId('213asf5554s5533525')",
-  "name": "Caio",
-  "email": "caio@gmail.com",
-  "password": "123456"
-}
-```
-
-Porém a senha não pode ser salva em **texto plano** na base de dados, uma vez que se alguém invadir sua base de dados, terá acesso aos dados do usuário. Para resolver isso, teremos de fazer o **hash** da senha.
 
 # login
 
