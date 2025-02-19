@@ -719,15 +719,16 @@ const jwt = require("jsonwebtoken");
 
 // Método gerar token
 
-userSchema.methods.generateToken = function () {
+userSchema.methods.generateToken = async function () {
   const user = this;
 
   const userToken = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
     expiresIn: "7d",
   });
 
-  try {
-  } catch (error) {}
+  user.tokens.push(userToken);
+
+  return userToken;
 };
 ```
 
