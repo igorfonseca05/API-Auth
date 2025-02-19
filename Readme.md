@@ -801,6 +801,8 @@ exports.login = async (req, res) => {
   try {
     const user = await UserModel.findByCredentials(req.body); // Vamos criar esse método no userModel
 
+    await user.generateToken();
+
     return res.status(200).json({
       success: true,
       message: "Login realizado com sucesso.",
