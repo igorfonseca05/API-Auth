@@ -844,10 +844,15 @@ O código acima anexamos um novo método ao model de modo que agora, podemos inv
 
 # logout
 
-A rota logout é a rota responsavel por finalizar a sessão do usuário na aplicação, para fazer precisamos primeiro verificar se o usuário que está tentando fazer o logout é autorizado a fazer isso, ou seja, se ele possui um token de acesso. Para isso teremos de antes de implementar a lógica de logout, criar um middleware que verifica o token do usuário. Esse middleware será utilizado em todas as rotas privadas.
+A rota logout é a rota responsavel por finalizar a sessão do usuário na aplicação, para fazer precisamos primeiro verificar se o usuário que está tentando fazer o logout é autorizado a fazer isso, ou seja, se ele possui um token de acesso. Para isso antes de implementarmos a lógica de logout, devemos criar um middleware que verifica o token do usuário. Esse middleware será utilizado em todas as rotas privadas.
 
 ```javascript
+const jwt = require("jsonwebtoken");
 
+function verifyToken(req, res, next) {
+  const token =
+    req.cookies.userToken || req.headers.authorization?.replace("Bearer ", "");
+}
 ```
 
 ```javascript
