@@ -848,11 +848,18 @@ A rota logout é a rota responsavel por finalizar a sessão do usuário na aplic
 
 ```javascript
 const jwt = require("jsonwebtoken");
+const UserModel = require()
 
-function verifyToken(req, res, next) {
+async function verifyToken(req, res, next) {
   const token =
     req.cookies.userToken || req.headers.authorization?.replace("Bearer ", "");
 }
+
+const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+const user = await UserModel.
+
+
 ```
 
 ```javascript
