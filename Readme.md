@@ -846,20 +846,34 @@ O código acima anexamos um novo método ao model de modo que agora, podemos inv
 
 A rota logout é a rota responsavel por finalizar a sessão do usuário na aplicação, para fazer precisamos primeiro verificar se o usuário que está tentando fazer o logout é autorizado a fazer isso, ou seja, se ele possui um token de acesso. Para isso antes de implementarmos a lógica de logout, devemos criar um middleware que verifica o token do usuário. Esse middleware será utilizado em todas as rotas privadas.
 
+### verifyToken.js
+
 ```javascript
 const jwt = require("jsonwebtoken");
-const UserModel = require()
+const UserModel = require("../model/userModel");
 
 async function verifyToken(req, res, next) {
-  const token =
-    req.cookies.userToken || req.headers.authorization?.replace("Bearer ", "");
+  try {
+    const token =
+      req.cookies.userToken ||
+      req.headers.authorization?.replace("Bearer ", "");
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    const user = await UserModel.findById(decoded._id);
+
+    if (!user) {
+      throw new Error("Usuário não cadastrado");
+    }
+
+    req.user = user;
+    req.token = token;
+
+    next();
+  } catch (error) {
+    res.status(401).json({ message: error.message });
+  }
 }
-
-const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-const user = await UserModel.
-
-
 ```
 
 ```javascript
